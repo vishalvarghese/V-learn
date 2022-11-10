@@ -2,9 +2,11 @@ import React from 'react'
 import Vlearnlogo from '../../asset/Vlearn-logos_transparent.png'
 import adminimg from '../../asset/adminimg.webp'
 import {Link} from "react-router-dom";
+
 function adminsignup() {
   return (
     <div>
+ 
       <div className='flex justify-evenly'>
         {/* <div className='font-bold'><p className='text-2xl pt-5'> IF <span className='text-4xl text-blue-900'> OPPORTUNITY</span> <br /> DOESN'T KNOCK,<br /><span className='text-4xl text-blue-900'> BUILD A DOOR.</span></p></div> */}
         <div> <img className='w-40 h-45 m-4' src={Vlearnlogo} alt="" /></div>
