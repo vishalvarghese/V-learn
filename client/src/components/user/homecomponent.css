@@ -1,0 +1,12 @@
+.homepic_4
+{
+    
+   
+    background-image: url('../../asset/homepic4.webp');
+    background-image: center;
+    background-repeat: no-repeat;
+    height: 500px;
+    width:100%;
+    background-size: cover;    
+   
+}
