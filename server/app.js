@@ -18,6 +18,8 @@ var app = express();
 var cors=require('cors')
 app.use(cors())
 
+const dotenv = require('dotenv')
+dotenv.config()
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

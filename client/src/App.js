@@ -12,6 +12,7 @@ import Adminpostmanagepage from './pages/admin/adminpostmanagepage';
 import Admininboxpage from './pages/admin/admininboxpage';
 import Admincoursemanagepage from './pages/admin/admincoursemanagepage';
 import Feedpage from './pages/user/feedpage';
+import Profilepage from './pages/user/profilepage';
 function App() {
   return (
     <div className="App">
@@ -22,6 +23,7 @@ function App() {
           <Route path='/login'element={<Login/>}/>
           <Route path='/signup' element={<Signup/>}/>
           <Route path='/feed' element={<Feedpage/>}/>
+          <Route path='/profile' element={<Profilepage/>}/>
           {/* Admin routes */}
           <Route path='/admin' element={<Adminlogin/>}/>
           <Route path='/admindashboard' element={<Admindash/>}/>

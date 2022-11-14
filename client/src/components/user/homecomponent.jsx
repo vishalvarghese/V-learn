@@ -3,7 +3,7 @@ import Vlearnlogo from '../../asset/Vlearn-logos_transparent.png'
 import homepic1 from '../../asset/homepic1.webp'
 import homepic2 from '../../asset/homepic2.webp'
 import homepic3 from '../../asset/homepic3.webp'
-
+import {Link} from "react-router-dom";
 import homepic1_2 from '../../asset/homepic1.2.jpeg'
 import "./homecomponent.css";
 function homecomponent() {
@@ -13,8 +13,9 @@ function homecomponent() {
         <div className='flex justify-between'>       
             <div> <img className='w-36 h-36 m-4'  src={Vlearnlogo} alt="" /></div>
        
-            <div> <button className='bg-blue-900 text-white rounded p-2 m-3'>Sign In</button>
-            <button className='bg-blue-900 text-white rounded p-2 m-3'>Sign Up</button>
+            <div>
+            <Link to='/login'> <button className='bg-blue-900 text-white rounded p-2 m-3'>Sign In</button></Link>
+            <Link to='/signup'><button className='bg-blue-900 text-white rounded p-2 m-3'>Sign Up</button></Link>
             </div>
          </div>
        
@@ -53,7 +54,7 @@ function homecomponent() {
             </div>
        </div>
 
-       <div className='w-screen bg-slate-300'>
+       <div className='w-auto bg-slate-300'>
         <img className='w-36 h-36 ' src={Vlearnlogo} alt="" />
        </div>
 
