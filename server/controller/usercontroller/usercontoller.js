@@ -2,6 +2,7 @@ const app = require("../../app");
 const User=require("../../modal/userschema")
 const bcrypt =require('bcrypt')
 const jwt = require("jsonwebtoken")
+const Post=require("../../modal/postschema")
 const postSignup = async (req, res) => {
     try {
         // console.log({ ...req.body });
@@ -26,9 +27,13 @@ const login = async (req, res) => {
     // console.log(req.body);
     const { email, password } = req.body;
     const user = await User.findOne({ email });
-
+    
     if (!user) {
         return res.json({ error: "User not found" })
+    }
+    else if(user.status=='Blocked')
+    {
+        return res.json({ error: "Access denied temporarily" })
     }
     else {
         const auth = await bcrypt.compare(password, user.password);
@@ -36,11 +41,11 @@ const login = async (req, res) => {
         if (auth) {
             console.log("entered");
             //token generation
-            const token = jwt.sign({ email: user.email }, process.env.JWT_SECRET,{ expiresIn: "7d" })
-            console.log(token);
+            const usertoken = jwt.sign({ email: user.email }, process.env.JWT_SECRET,{ expiresIn: "7d" })
+            // console.log(token);
             if (res.status(201)) {
                 console.log('hai');
-                return res.json({ state: "ok", data: token })
+                return res.json({ state: "ok", userdata: usertoken,user:user })
             } else {
                 console.log('hello');
                 return res.json({ error: "error" });
@@ -52,5 +57,17 @@ const login = async (req, res) => {
     }
 }
 
+const addpost= async(req,res)=>{
+    console.log(req.body);
+    const newPost=new Post(req.body)
+    try {
+      const savedPost=await newPost.save()
+    //   await Users.updateOne({$push:{posts:savedPost._id}})
+      res.json(savedPost)
+      
+    } catch (error) {
+      res.json(error)
+    }
+}
 
-module.exports={postSignup,login}
+module.exports={postSignup,login,addpost}

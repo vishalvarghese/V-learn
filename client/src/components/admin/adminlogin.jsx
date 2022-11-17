@@ -3,7 +3,6 @@ import Vlearnlogo from '../../asset/Vlearn-logos_transparent.png'
 import adminimg from '../../asset/adminimg.webp'
 import {useNavigate} from "react-router-dom";
 import axios from "axios"
-import { useCookies } from 'react-cookie';
 function Adminsignup() {
   const navigate=useNavigate()
   const formvalues ={
@@ -12,7 +11,6 @@ function Adminsignup() {
    }
    const [errorMessage, setErrorMessage] = useState('')
   const [adminLoginData,setadminLoginData]=useState(formvalues);
-  const [cookies, setCookie] = useCookies(['admin']);
   const handleChange= (e) =>{
     setadminLoginData({...adminLoginData,[e.target.name]:e.target.value})
   }
@@ -24,8 +22,9 @@ function Adminsignup() {
       console.log(response);
       setErrorMessage(response.data.error)
       if (response.data.state=="ok") {
+        console.log(response.data.admindata);
         alert("login sucessful")
-        setCookie('admin-token', response.data.data, { path: '/' });
+        localStorage.setItem("admintoken",response.data.admindata)
       navigate("/admindashboard")
       }
     }) 

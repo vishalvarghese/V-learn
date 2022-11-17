@@ -11,13 +11,50 @@ import sendicon from '../../asset/sendicon.png'
 import profilepic from '../../asset/profilepic.jpg'
 import postimage from '../../asset/postimage.jpg'
 import openmike from '../../asset/openmikecnn.mp4'
+import pdf from '../../asset/pdf.pdf'
+import {useSelector} from 'react-redux'
+import axios from 'axios'
+import {GrFavorite} from "react-icons/gr";
+
 function Feed() {
+  const PF=process.env.REACT_APP_PUBLIC_FOLDER
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [file,setFile]=useState('')
+  const [desc,setDesc]=useState('')
+  const user=useSelector((state)=>state.user)
+  //console.log(user);
+  const submitHandler=async(e)=>{
+    e.preventDefault() 
+    const newPost={
+      userId:user._id,
+      desc:desc,
+    }
+     if(file){
+      const data=new FormData();
+      const fileName=file.name
+      data.append("file",file)
+      data.append("name",fileName)
+      newPost.img=fileName
+      try {
+        await axios.post('http://localhost:5000/post/upload',data)
+       
+        
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    try{
+       await axios.post('http://localhost:5000/post',newPost)
+        window.location.reload()
+    }catch(err){
+     console.log(err);
+    }
+  }
   return (
-    <div className='bg-blue-50'>
+    <div className='bg-blue-50 feedbody'>
       {/*feed header start*/}
 
-      <div class="bg-blue-50">
+      <div class="bg-blue-50  feedheader">
         <div class="px-4 py-5 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-24 lg:px-8">
           <div class="relative flex items-center justify-between">
             <a
@@ -57,8 +94,9 @@ function Feed() {
                     title="Our product"
                     class="font-medium tracking-wide text-blue-900 transition-colors duration-200 hover:text-teal-accent-400"
                   >
-                    <div className='text-xs'>  <img className='w-10 h-10' src={feedimg} alt="" />
-                      FEED
+                    <div className='text-xs'>
+                     <div className='flex justify-center'><img className='w-10 h-10' src={feedimg} alt="" /></div>
+                      <div className='flex justify-center'> FEED</div>
                     </div>
                   </a>
                 </li>
@@ -69,32 +107,23 @@ function Feed() {
                     title="Our product"
                     class="font-medium tracking-wide text-blue-900 transition-colors duration-200 hover:text-teal-accent-400"
                   >
-                    <div className='flex text-xs justify-center'>
-                      <img className='w-10 h-10' src={connectionimg} alt="" />
-                      <p className='pt-3'> CONNECTIONS</p>
+                    <div className='flex flex-col text-xs justify-center'>
+                      <div className='flex justify-center'><img className='w-10 h-10' src={connectionimg} alt="" /></div>
+                      <div><p className=''> CONNECTIONS</p></div>
                     </div>
                   </a>
                 </li>
-                {/* <li>
-              <a
-                href="/"
-                aria-label="Product pricing"
-                title="Product pricing"
-                class="font-medium tracking-wide text-blue-900 transition-colors duration-200 hover:text-teal-accent-400"
-              >
-                Educators
-              </a>
-            </li> */}
+               
                 <li>
                   <a
-                    href="/"
+                    href="/chatbox"
                     aria-label="About us"
                     title="About us"
                     class="font-medium tracking-wide text-blue-900 transition-colors duration-200 hover:text-teal-accent-400"
                   >
                     <div className='text-xs  justify-between w-full items-center'>
-                      <img className='w-10 h-10' src={chatimg} alt="" />
-                      CHAT
+                      <div className='flex justify-center'><img className='w-10 h-10' src={chatimg} alt="" /></div>
+                     <div className='flex justify-center'>CHAT</div>
                     </div>
                   </a>
                 </li>
@@ -104,7 +133,7 @@ function Feed() {
               <li>
                 <a
                   href="/profile"
-                  class="inline-flex items-center justify-center h-12 px-6 font-medium tracking-wide text-blue-900 transition duration-200 rounded shadow-md bg-deep-purple-accent-400 hover:bg-deep-purple-accent-700 focus:shadow-outline focus:outline-none"
+                  class="inline-flex items-center justify-center h-12 px-6 font-medium tracking-wide text-blue-900 transition duration-200 rounded bg-deep-purple-accent-400 hover:bg-deep-purple-accent-700 focus:shadow-outline focus:outline-none"
                   aria-label="Sign up"
                   title="Sign up"
                 >
@@ -223,7 +252,7 @@ function Feed() {
                       </li> */}
                         <li>
                           <a
-                            href="/"
+                            href="/chatbox"
                             aria-label="About us"
                             title="About us"
                             class="font-medium tracking-wide text-gray-700 transition-colors duration-200 hover:text-deep-purple-accent-400"
@@ -255,12 +284,15 @@ function Feed() {
       {/* post begins */}
       <div className='bg-white w-full px-4 py-12 mx-auto max-w-7xl md:w-3/4 lg:w-3/5'>
         {/* kousal */}
+        
         <div className='share'>
           <div className='shareWrapper'>
+          <form onSubmit={submitHandler} action=""> 
             <div className="shareTop">
               {/* <img src='/assets/c2.jpg' className='shareProfileImg' alt=""></img> */}
               <p className='text-blue-900 text-sm font-bold'>NEW POST</p>
-              <input placeholder="what's in your mind ?" className='mt-3 shareInput' />
+              {/* <input placeholder="what's in your mind ?" className='mt-3 shareInput' /> */}
+              <textarea onChange={(e)=>{setDesc(e.target.value)}}  placeholder="what's in your mind ?" className='postmessage mt-3 shareInput h-9 w-18' name="" id="" cols="30" rows="10"></textarea>
 
             </div>
             <hr className='shareHr' />
@@ -268,14 +300,32 @@ function Feed() {
               <div className="shareOptions">
                 <div className="shareOptions">
                   {/* <PermMedia htmlColor="tomato" className='shareIcon'/> */}
+                    {/* <label for="fileInput"> 
+                     <img className='w-10 h-10' id="icon" src={picimg}/>
+                    </label>
+                     <input hidden id="fileInput" type="file"></input> */}
+                
 
-                  <span className='shareOptionText'><img className='w-10 h-10' src={picimg} alt="" /></span>
-                  <span className='mx-4 shareOptionText'><img className='w-10 h-10' src={videoimg} alt="" /></span>
+                  <span className='shareOptionText'>
+                    <label for="fileInput1"> 
+                     <img className='w-10 h-10' id="icon" src={picimg}/>
+                    </label>
+                    <input hidden id="fileInput1" name='file' type="file" onChange={(e)=>setFile(e.target.files[0])}></input>
+                    {/* <img className='w-10 h-10' src={picimg} alt="" /> */}
+                    </span>
+                  <span className='mx-4 shareOptionText'>
+                  <label for="fileInput2"> 
+                     <img className='w-10 h-10' id="icon" src={videoimg}/>
+                    </label>
+                    <input hidden id="fileInput2" type="file"></input>
+                    {/* <img className='w-10 h-10' src={videoimg} alt="" /> */}
+                    </span>
                 </div>
               </div>
 
-              <button className='shareButton'><img className='w-10 h-10' src={sendicon} alt="" /></button>
-            </div>
+              <button type='submit' className='shareButton'><img className='w-10 h-10' src={sendicon} alt="" /></button>
+             </div>
+             </form>
           </div>
         </div>
         {/* kousal */}
@@ -383,9 +433,9 @@ function Feed() {
               Earlier RPA bots used to have some limitations like it would take structured data for processing from excel, database, on these data. But with advancements in technology like OCR (Optical
               Character Recognition) and Machine Learning, RPA bots are capable of extracting these data …
             </p>
-            <video className='w-full h-96' controls src={openmike} type="video/mp4"></video>
+            <video className='w-full h-96' controls src={PF+"incubation management project.mp4"} type="video/mp4"></video>
             <div className='flex'>
-            <p className='text-black mx-2'><button className='bg-blue-400 w-auto p-1 rounded-2xl'>like(24)</button></p>
+            <p className='text-black mx-2'><button className='w-auto p-1 rounded-2xl'><GrFavorite style={{backgroundColor:""}}/></button></p>
               <p className='text-blue-900 mx-2'><u>comments</u> (3)</p>
 
             </div>

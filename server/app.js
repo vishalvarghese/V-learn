@@ -23,6 +23,8 @@ dotenv.config()
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
+//image and video path for react page
+app.use('/images',express.static(path.join(__dirname,'public/images')))
 // app.set('view engine', 'jade');
 
 app.use(logger('dev'));

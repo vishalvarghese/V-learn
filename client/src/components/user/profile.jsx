@@ -1,6 +1,9 @@
 import React from 'react'
 // import profilepic from '../../asset/img/team-2-800x800.jpg'
 import profilepic from '../../asset/profilepic.jpg'
+import Owncourse from './owncourse'
+import Gallery from './gallery'
+import Connect_requests from './connect_requests'
 function profile() {
   return (
     <div>
@@ -73,19 +76,19 @@ function profile() {
                         <span className="text-xl font-bold block uppercase tracking-wide text-gray-700">
                           22
                         </span>
-                        <span className="text-sm text-gray-500">Friends</span>
+                        <span className="text-sm text-gray-500">Connections</span>
                       </div>
                       <div className="mr-4 p-3 text-center">
-                        <span className="text-xl font-bold block uppercase tracking-wide text-gray-700">
+                        <a href="/gallery"><span className="text-xl font-bold block uppercase tracking-wide text-gray-700">
                           10
-                        </span>
-                        <span className="text-sm text-gray-500">Photos</span>
+                        </span></a>
+                        <a href="/gallery"><span className="text-sm text-gray-500">Photos</span></a>
                       </div>
                       <div className="lg:mr-4 p-3 text-center">
                         <span className="text-xl font-bold block uppercase tracking-wide text-gray-700">
-                          89
+                          5
                         </span>
-                        <span className="text-sm text-gray-500">Comments</span>
+                        <span className="text-sm text-gray-500">Requests</span>
                       </div>
                     </div>
                   </div>
@@ -96,16 +99,16 @@ function profile() {
                   </h3>
                   <div className="text-sm leading-normal mt-0 mb-2 text-gray-500 font-bold uppercase">
                     <i className="fas fa-map-marker-alt mr-2 text-lg text-gray-500"></i>{" "}
-                    Los Angeles, California
+                    Software Developer,Devops
                   </div>
-                  <div className="mb-2 text-gray-700 mt-10">
+                  {/* <div className="mb-2 text-gray-700 mt-10">
                     <i className="fas fa-briefcase mr-2 text-lg text-gray-500"></i>
                     Solution Manager - Creative Tim Officer
                   </div>
                   <div className="mb-2 text-gray-700">
                     <i className="fas fa-university mr-2 text-lg text-gray-500"></i>
                     University of Computer Science
-                  </div>
+                  </div> */}
                 </div>
                 <div className="mt-10 py-10 border-t border-gray-300 text-center">
                   <div className="flex flex-wrap justify-center">
@@ -117,69 +120,19 @@ function profile() {
                         warm, intimate feel with a solid groove structure. An
                         artist of considerable range.
                       </p>
-                      <a
+                      {/* <a
                         href="#pablo"
                         className="font-normal text-pink-500"
                         onClick={e => e.preventDefault()}
                       >
                         Show more
-                      </a>
-
+                      </a> */}
                 
                     </div>
-
-                          {/* start course */}
-                          <section class="py-20">
-  <h1 class="mb-12 text-center font-sans text-5xl font-bold">Recent Posts</h1>
-  <div class="mx-auto grid max-w-screen-lg grid-cols-1 gap-5 p-5 sm:grid-cols-2 md:grid-cols-3 lg:gap-10">
-    
-    <article class="h-90 col-span-1 m-auto min-h-full cursor-pointer overflow-hidden rounded-lg pb-2 shadow-lg transition-transform duration-200 hover:translate-y-2">
-      <a href="#" class="block h-full w-full">
-        <img class="max-h-40 w-full object-cover" alt="featured image" src="https://images.unsplash.com/photo-1660241588741-d653d53348fa?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHw5fHx8ZW58MHx8fHw%3D&auto=format&fit=crop&w=500&q=60" />
-        <div class="w-full bg-white p-4">
-          <p class="text-md font-medium text-indigo-500">Nature</p>
-          <p class="mb-2 text-xl font-medium text-gray-800">A Visit to Mount Abignale</p>
-          <p class="text-md font-light text-gray-400">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Esse vel neque ipsam?</p>
-          <div class="justify-starts mt-4 flex flex-wrap items-center">
-            <div class="mr-2 mt-1 rounded-2xl bg-blue-100 py-1.5 px-4 text-xs text-gray-600">#js</div>
-            <div class="mr-2 mt-1 rounded-2xl bg-blue-100 py-1.5 px-4 text-xs text-gray-600">#icefactory</div>
-          </div>
-        </div>
-      </a>
-    </article>
-    
-    <article class="h-90 col-span-1 m-auto min-h-full cursor-pointer overflow-hidden rounded-lg pb-2 shadow-lg transition-transform duration-200 hover:translate-y-2">
-      <a href="#" class="block h-full w-full">
-        <img class="max-h-40 w-full object-cover" alt="featured image" src="https://images.unsplash.com/photo-1660213372424-deecb106a28e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHw0Mnx8fGVufDB8fHx8&auto=format&fit=crop&w=500&q=60" />
-        <div class="w-full bg-white p-4">
-          <p class="text-md font-medium text-indigo-500">Gardening</p>
-          <p class="mb-2 text-xl font-medium text-gray-800">Sunflowers are my favorite</p>
-          <p class="text-md font-light text-gray-400">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Esse vel neque ipsam?</p>
-          <div class="justify-starts mt-4 flex flex-wrap items-center">
-            <div class="mr-2 mt-1 rounded-2xl bg-blue-100 py-1.5 px-4 text-xs text-gray-600">#js</div>
-            <div class="mr-2 mt-1 rounded-2xl bg-blue-100 py-1.5 px-4 text-xs text-gray-600">#icefactory</div>
-          </div>
-        </div>
-      </a>
-    </article>
-    
-    <article class="h-90 col-span-1 m-auto min-h-full cursor-pointer overflow-hidden rounded-lg pb-2 shadow-lg transition-transform duration-200 hover:translate-y-2">
-      <a href="#" class="block h-full w-full">
-        <img class="max-h-40 w-full object-cover" alt="featured image" src="https://images.unsplash.com/photo-1660227868332-93e0a0a8c67e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwzOXx8fGVufDB8fHx8&auto=format&fit=crop&w=500&q=60" />
-        <div class="w-full bg-white p-4">
-          <p class="text-md font-medium text-indigo-500">Coding</p>
-          <p class="mb-2 text-xl font-medium text-gray-800">Getting to know the Ice Factory Pattern</p>
-          <p class="text-md font-light text-gray-400">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Esse vel neque ipsam?</p>
-          <div class="justify-starts mt-4 flex flex-wrap items-center">
-            <div class="mr-2 mt-1 rounded-2xl bg-blue-100 py-1.5 px-4 text-xs text-gray-600">#js</div>
-            <div class="mr-2 mt-1 rounded-2xl bg-blue-100 py-1.5 px-4 text-xs text-gray-600">#icefactory</div>
-          </div>
-        </div>
-      </a>
-    </article>
-  </div>
-</section>
-                      {/* end course */}
+                   <Owncourse/>
+                   <Gallery/>
+                      <Connect_requests/>          
+                    
                   </div>
                 </div>
               </div>

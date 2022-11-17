@@ -71,16 +71,16 @@ console.log(error.message);
   return (
     <div>
       <div className='flex justify-between'>
-        <div> <img className='w-52 h-45 m-4 ml-20' src={Vlearnlogo} alt="" /></div>
-                <div className='font-bold'><p className='mt-28 text-4xl pt-5 text-blue-900'>Create Account </p></div>
+        <div> <img className='w-52 h-45 m-4 md:ml-20 ' src={Vlearnlogo} alt="" /></div>
+       <div className='hidden lg:block font-bold'><p className='mt-28 text-4xl pt-5 text-blue-900'>Create Account </p></div>
 
-        <div className='p-5 mr-20'>ALREADY IN <Link to='/login'><span className='text-blue-900'> V-LEARN?</span></Link></div>
+        <div className='p-5 text-sm sm:text-xl lg:mr-20'>ALREADY IN <Link to='/login'><span className='text-blue-900'> V-LEARN?</span></Link></div>
       </div>
 
-      <div className='flex justify-evenly'>
-      <div><img className='' src={signimg} alt="" /></div>
+      <div className='lg:flex justify-evenly'>
+      <div className='hidden lg:block'><img className='' src={signimg} alt="" /></div>
         {/* login form */}
-        <div className='w-1/2'>
+        <div className='flex justify-center lg:w-1/2'>
           {/* //start */}
           <form className='max-w-[400px] w-full h-max mx-auto rounded-lg bg-slate-300 p-8 px-8 '>
           {errorMessage && <div className="p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg dark:bg-red-200 dark:text-red-800" role="alert">{errorMessage}</div>}

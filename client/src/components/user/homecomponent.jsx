@@ -20,7 +20,7 @@ function homecomponent() {
          </div>
        
        <div className='lg:flex'>
-           <div >
+           <div className='flex justify-center' >
            <img className='m-3' src={homepic1} alt="" />
            </div>
       
@@ -29,25 +29,25 @@ function homecomponent() {
            </div>
        </div>
 
-       <div className='flex'>
-            <div className='w-1/2 text-center m-16'>
+       <div className='lg:flex'>
+            <div className='lg:w-1/2 text-center m-16'>
                <div className='text-6xl text-blue-900 font-bold m-3'>SHARE</div>
                <div><p className='text-3xl m-3'>YOUR KNOWLEGDGE FOR THE WORLD <br/> TO LEARN</p></div>
                <button className='bg-blue-900 text-white rounded p-2 m-3'>POST NOW</button>
            </div>
-           <div><img src={homepic2} alt="" /></div>
+           <div className='flex justify-center'><img src={homepic2} alt="" /></div>
        </div>
 
        <div className='flex'>
-             <div>  <img src={homepic3} alt="" /></div>
+             <div className='hidden lg:block' >  <img src={homepic3} alt="" /></div>
        
-             <div className='w-1/2 text-center m-40'>
+             <div className='lg:w-1/2 text-center m-40'>
                  <div><p className='text-3xl m-3'> <span className='text-blue-900'> CONNECT </span> WITH <span className='text-blue-900'> TOP EDUCATORS</span>  <br/> WHO CAN HELP</p></div>
                  <button className='bg-blue-900 text-white rounded p-2 m-3'>Connect</button>
               </div>
         </div>
 
-       <div>
+       <div className='hidden lg:block'>
             <div className="homepic_4  text-center justify-items-end">
             
              <p className='text-2xl '> JOIN YOUR COLLEAGUES,<br/> CLASSMATES AND FRIENDS ON <span className='text-blue-900'> V-LEARN</span></p>

@@ -13,17 +13,25 @@ import Admininboxpage from './pages/admin/admininboxpage';
 import Admincoursemanagepage from './pages/admin/admincoursemanagepage';
 import Feedpage from './pages/user/feedpage';
 import Profilepage from './pages/user/profilepage';
+import Chatboxpage from './pages/user/chatboxpage';
+import Test from './components/user/test';
+import Gallerypage from './pages/user/gallerypage';
+import Courseviewpage from './pages/user/courseviewpage';
 function App() {
   return (
     <div className="App">
       <Router>
         <Routes>
+        <Route path='/test' element={<Test/>}/>
           {/* User routes */}
           <Route path='/' element={<Home/>}/>
           <Route path='/login'element={<Login/>}/>
           <Route path='/signup' element={<Signup/>}/>
           <Route path='/feed' element={<Feedpage/>}/>
           <Route path='/profile' element={<Profilepage/>}/>
+          <Route path='/chatbox' element={<Chatboxpage/>}/>
+          <Route path='/gallery' element={<Gallerypage/>}/>
+          <Route path='/courseview' element={<Courseviewpage/>}/>
           {/* Admin routes */}
           <Route path='/admin' element={<Adminlogin/>}/>
           <Route path='/admindashboard' element={<Admindash/>}/>
