@@ -7,7 +7,7 @@ function chatbox() {
     <div class="h-screen chatscreen p-5">
       <section class=" shadow-xl rounded-md w-full lg:w-11/12 lg:mx-auto flex">
         {/* <!-- Left section --> */}
-        <div class="w-full lg:w-3/6 xl:w-2/6 flex flex-col justify-start items-stretch  bg-white bg-opacity-80 rounded-md lg:rounded-none lg:rounded-l-md p-3">
+        <div class="w-full md:w-3/6 lg:w-3/6 xl:w-3/6 flex flex-col justify-start items-stretch  bg-white bg-opacity-80 rounded-md lg:rounded-none lg:rounded-l-md p-3">
           <div class="flex flex-row justify-between items-center mb-4">
             {/* <div class="flex flex-row">
               <button class="bg-red-500 text-white rounded-full p-1 mr-2 cursor-pointer h-4 w-4 focus:outline-none focus:ring" aria-label="Close">
@@ -255,7 +255,7 @@ function chatbox() {
           </div>
         </div>
         {/* <!-- Middle section --> */}
-        <div class="hidden w-3/6 bg-white h-full lg:flex flex-col justify-start items-stretch border-r-2 border-l-2 border-gray-100 lg:rounded-r-md xl:rounded-none">
+        <div class="hidden w-3/6 bg-white h-full md:flex flex-col justify-start items-stretch border-r-2 border-l-2 border-gray-100 lg:rounded-r-md xl:rounded-none">
           {/* <!-- Header with name --> */}
           <div class="flex flex-row items-center justify-between px-3 py-2 bg-gray-50 bg-opacity-40 border-b-2 border-gray-100">
             <div class="">
@@ -403,14 +403,14 @@ function chatbox() {
           </div>
         </div>
         {/* <!-- Right section --> */}
-        <div class="hidden w-2/6 xl:block bg-white rounded-r-md p-5 overflow-y-auto">
+        {/* <div class="hidden w-2/6 xl:block bg-white rounded-r-md p-5 overflow-y-auto">
           <header class="flex flex-row justify-end items-center">
             <button type="button" class="p-2 ml-2 text-gray-400 rounded-full hover:text-gray-600 hover:bg-gray-100 focus:outline-none focus:ring">
               <svg class="fill-current h-6 w-6" viewBox="0 0 20 20">
                 <path d="M15.898,4.045c-0.271-0.272-0.713-0.272-0.986,0l-4.71,4.711L5.493,4.045c-0.272-0.272-0.714-0.272-0.986,0s-0.272,0.714,0,0.986l4.709,4.711l-4.71,4.711c-0.272,0.271-0.272,0.713,0,0.986c0.136,0.136,0.314,0.203,0.492,0.203c0.179,0,0.357-0.067,0.493-0.203l4.711-4.711l4.71,4.711c0.137,0.136,0.314,0.203,0.494,0.203c0.178,0,0.355-0.067,0.492-0.203c0.273-0.273,0.273-0.715,0-0.986l-4.711-4.711l4.711-4.711C16.172,4.759,16.172,4.317,15.898,4.045z"></path>
               </svg>
             </button>
-          </header>
+          </header> */}
           {/* <main>
             <div class="flex flex-col justify-center items-center my-4">
               <img src="https://t.aimg.sk/magaziny/Ts0fWXOKR12frPTjZ3a8UA~Prav-burger-dom-ca-buchta.png?t=LzB4MzU6NTg2eDM2NS85MjB4NzYwL3NtYXJ0L2ZpbHRlcnM6Zm9ybWF0KGpwZWcp&h=aSkfJNypYaRvL4kRNsFH8g&e=2145916800&v=5" class="w-32 h-32 mb-4 rounded-full" alt=""/>
@@ -509,7 +509,7 @@ function chatbox() {
               </ul>
             </div>
           </main> */}
-        </div>
+        {/* </div> */}
       </section>
     </div>
   </body>

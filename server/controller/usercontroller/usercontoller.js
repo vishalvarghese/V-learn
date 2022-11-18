@@ -69,5 +69,15 @@ const addpost= async(req,res)=>{
       res.json(error)
     }
 }
+const getpost=async(req,res)=>{
+   try{
+    const allpost=await Post.find().populate('userId').sort({_id:-1});
+    console.log(allpost);   
+    res.json(allpost)
+   }catch(error)
+   {
+    console.log(error);
+   }
+}
 
-module.exports={postSignup,login,addpost}
+module.exports={postSignup,login,addpost,getpost}

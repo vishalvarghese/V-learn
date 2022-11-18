@@ -1,8 +1,10 @@
 const mongoose=require('mongoose')
+const user=require('./userschema')
 const postSchema=new mongoose.Schema({
     userId:{
         type:String,
-        required:true
+        required:true,
+        ref:user
     },
     desc:{
         type:String,

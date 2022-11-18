@@ -1,5 +1,5 @@
 var express = require('express');
-const { postSignup, login, addpost } = require('../controller/usercontroller/usercontoller');
+const { postSignup, login, addpost, getpost } = require('../controller/usercontroller/usercontoller');
 var router = express.Router();
 var multer =require('multer')
 
@@ -33,4 +33,6 @@ router.post('/login',login)
 
 router.post('/post/upload')
 router.post('/post',addpost)
+
+router.get('/feedpost',getpost)
 module.exports = router;

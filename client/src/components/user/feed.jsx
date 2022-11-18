@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState,useEffect } from 'react'
 import Vlearnlogo from '../../asset/Vlearn-logos_transparent.png'
 import headerlogo from '../../asset/header logo.png'
 import feedimg from '../../asset/feedimg.png'
@@ -12,44 +12,71 @@ import profilepic from '../../asset/profilepic.jpg'
 import postimage from '../../asset/postimage.jpg'
 import openmike from '../../asset/openmikecnn.mp4'
 import pdf from '../../asset/pdf.pdf'
-import {useSelector} from 'react-redux'
+import { useSelector } from 'react-redux'
 import axios from 'axios'
-import {GrFavorite} from "react-icons/gr";
-
+import { GrFavorite } from "react-icons/gr";
+import { format, render, cancel, register } from 'timeago.js';
 function Feed() {
-  const PF=process.env.REACT_APP_PUBLIC_FOLDER
+  const PF = process.env.REACT_APP_PUBLIC_FOLDER
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [file,setFile]=useState('')
-  const [desc,setDesc]=useState('')
-  const user=useSelector((state)=>state.user)
+  const [imageFile, setImageFile] = useState('')
+  const [videoFile,setVideoFile]=useState('')
+  const [desc, setDesc] = useState('')
+  const user = useSelector((state) => state.user)
+  const [post,setPost]=useState([])
   //console.log(user);
-  const submitHandler=async(e)=>{
-    e.preventDefault() 
-    const newPost={
-      userId:user._id,
-      desc:desc,
+  const submitHandler = async (e) => {
+    e.preventDefault()
+    const newPost = {
+      userId: user._id,
+      desc: desc,
     }
-     if(file){
-      const data=new FormData();
-      const fileName=file.name
-      data.append("file",file)
-      data.append("name",fileName)
-      newPost.img=fileName
+    if (imageFile) {
+      const data = new FormData();
+      const fileName = imageFile.name
+      data.append("file", imageFile)
+      data.append("name", fileName)
+      newPost.img = fileName
       try {
-        await axios.post('http://localhost:5000/post/upload',data)
-       
-        
+        await axios.post('http://localhost:5000/post/upload', data)
+
+
       } catch (error) {
         console.log(error);
       }
     }
-    try{
-       await axios.post('http://localhost:5000/post',newPost)
-        window.location.reload()
-    }catch(err){
-     console.log(err);
+    if (videoFile) {
+      const data = new FormData();
+      const fileName = videoFile.name
+      data.append("file",videoFile)
+      data.append("name", fileName)
+      newPost.video = fileName
+      try {
+        await axios.post('http://localhost:5000/post/upload', data)
+
+
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    try {
+      await axios.post('http://localhost:5000/post', newPost)
+      window.location.reload()
+    } catch (err) {
+      console.log(err);
     }
   }
+  useEffect(()=>{
+    axios.get('http://localhost:5000/feedpost',{
+    }).then((response)=>{
+      // console.log(response.data); 
+    setPost(response.data)
+
+    }).catch((err)=>{
+      console.log(err);
+    })
+  },[])
+ console.log(post);
   return (
     <div className='bg-blue-50 feedbody'>
       {/*feed header start*/}
@@ -63,21 +90,7 @@ function Feed() {
               title="Company"
               class="inline-flex items-center"
             >
-              {/* <svg
-              class="w-8 text-teal-accent-400"
-              viewBox="0 0 24 24"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeMiterlimit="10"
-              stroke="currentColor"
-              fill="none"
-            >
-              <rect x="3" y="1" width="7" height="12" />
-              <rect x="3" y="17" width="7" height="6" />
-              <rect x="14" y="1" width="7" height="6" />
-              <rect x="14" y="11" width="7" height="12" />
-            </svg> */}
+
 
               <img className='w-20 h-20' src={headerlogo} alt="" />
               <span class="ml-2 text-xl font-bold tracking-wide text-blue-900">
@@ -95,7 +108,7 @@ function Feed() {
                     class="font-medium tracking-wide text-blue-900 transition-colors duration-200 hover:text-teal-accent-400"
                   >
                     <div className='text-xs'>
-                     <div className='flex justify-center'><img className='w-10 h-10' src={feedimg} alt="" /></div>
+                      <div className='flex justify-center'><img className='w-10 h-10' src={feedimg} alt="" /></div>
                       <div className='flex justify-center'> FEED</div>
                     </div>
                   </a>
@@ -113,7 +126,7 @@ function Feed() {
                     </div>
                   </a>
                 </li>
-               
+
                 <li>
                   <a
                     href="/chatbox"
@@ -123,7 +136,7 @@ function Feed() {
                   >
                     <div className='text-xs  justify-between w-full items-center'>
                       <div className='flex justify-center'><img className='w-10 h-10' src={chatimg} alt="" /></div>
-                     <div className='flex justify-center'>CHAT</div>
+                      <div className='flex justify-center'>CHAT</div>
                     </div>
                   </a>
                 </li>
@@ -181,21 +194,7 @@ function Feed() {
                           title="Company"
                           class="inline-flex items-center"
                         >
-                          {/* <svg
-                          class="w-8 text-deep-purple-accent-400"
-                          viewBox="0 0 24 24"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeMiterlimit="10"
-                          stroke="currentColor"
-                          fill="none"
-                        >
-                          <rect x="3" y="1" width="7" height="12" />
-                          <rect x="3" y="17" width="7" height="6" />
-                          <rect x="14" y="1" width="7" height="6" />
-                          <rect x="14" y="11" width="7" height="12" />
-                        </svg> */}
+
                           <img className='w-20 h-20' src={headerlogo} alt="" />
                           <span class="ml-2 text-xl font-bold tracking-wide text-gray-800 uppercase">
                             V-learn
@@ -284,125 +283,73 @@ function Feed() {
       {/* post begins */}
       <div className='bg-white w-full px-4 py-12 mx-auto max-w-7xl md:w-3/4 lg:w-3/5'>
         {/* kousal */}
-        
+
         <div className='share'>
           <div className='shareWrapper'>
-          <form onSubmit={submitHandler} action=""> 
-            <div className="shareTop">
-              {/* <img src='/assets/c2.jpg' className='shareProfileImg' alt=""></img> */}
-              <p className='text-blue-900 text-sm font-bold'>NEW POST</p>
-              {/* <input placeholder="what's in your mind ?" className='mt-3 shareInput' /> */}
-              <textarea onChange={(e)=>{setDesc(e.target.value)}}  placeholder="what's in your mind ?" className='postmessage mt-3 shareInput h-9 w-18' name="" id="" cols="30" rows="10"></textarea>
+            <form onSubmit={submitHandler} action="">
+              <div className="shareTop">
+                {/* <img src='/assets/c2.jpg' className='shareProfileImg' alt=""></img> */}
+                <p className='text-blue-900 text-sm font-bold'>NEW POST</p>
+                {/* <input placeholder="what's in your mind ?" className='mt-3 shareInput' /> */}
+                <textarea onChange={(e) => { setDesc(e.target.value) }} placeholder="what's in your mind ?" className='postmessage mt-3 shareInput h-9 w-18' name="" id="" cols="30" rows="10"></textarea>
 
-            </div>
-            <hr className='shareHr' />
-            <div className='shareBottom'>
-              <div className="shareOptions">
-                <div className="shareOptions">
-                  {/* <PermMedia htmlColor="tomato" className='shareIcon'/> */}
-                    {/* <label for="fileInput"> 
-                     <img className='w-10 h-10' id="icon" src={picimg}/>
-                    </label>
-                     <input hidden id="fileInput" type="file"></input> */}
-                
-
-                  <span className='shareOptionText'>
-                    <label for="fileInput1"> 
-                     <img className='w-10 h-10' id="icon" src={picimg}/>
-                    </label>
-                    <input hidden id="fileInput1" name='file' type="file" onChange={(e)=>setFile(e.target.files[0])}></input>
-                    {/* <img className='w-10 h-10' src={picimg} alt="" /> */}
-                    </span>
-                  <span className='mx-4 shareOptionText'>
-                  <label for="fileInput2"> 
-                     <img className='w-10 h-10' id="icon" src={videoimg}/>
-                    </label>
-                    <input hidden id="fileInput2" type="file"></input>
-                    {/* <img className='w-10 h-10' src={videoimg} alt="" /> */}
-                    </span>
-                </div>
               </div>
+              <hr className='shareHr' />
+              <div className='shareBottom'>
+                <div className="shareOptions">
+                  <div className="shareOptions">
 
-              <button type='submit' className='shareButton'><img className='w-10 h-10' src={sendicon} alt="" /></button>
-             </div>
-             </form>
+
+
+                    <span className='shareOptionText'>
+                      <label for="fileInput1">
+                        <img className='w-10 h-10' id="icon" src={picimg} />
+                      </label>
+                      <input hidden id="fileInput1" name='imageFile' type="file" onChange={(e) => setImageFile(e.target.files[0])}></input>
+                      {/* <img className='w-10 h-10' src={picimg} alt="" /> */}
+                    </span>
+                    <span className='mx-4 shareOptionText'>
+                      <label for="fileInput2">
+                        <img className='w-10 h-10' id="icon" src={videoimg} />
+                      </label>
+                      <input hidden id="fileInput2" name='videoFile' type="file" onChange={(e)=>{setVideoFile(e.target.files[0])}}></input>
+                      {/* <img className='w-10 h-10' src={videoimg} alt="" /> */}
+                    </span>
+                  </div>
+                </div>
+
+                <button type='submit' className='shareButton'><img className='w-10 h-10' src={sendicon} alt="" /></button>
+              </div>
+            </form>
           </div>
         </div>
         {/* kousal */}
       </div>
       <section class=" bg-white w-full px-4  mx-auto max-w-7xl md:w-3/4 lg:w-3/5">
-        {/* <div class="mb-12 text-left md:text-center">
-    <h2 class="mb-2 text-3xl font-extrabold leading-tight text-gray-900">Skcript Blog</h2>
-    <p class="text-lg text-gray-500">Everything comes directly from the desk of the respective engineers, creators and managers at Skcript.</p>
-  
-  </div> */}
+
 
 
         <div class="flex flex-col divide-y divide-gray-200">
+        {
+               post.map((obj)=>{
+                    return(  
+          
           <div>
-
             <p class="  text-sm font-normal text-gray-500"> <img className='w-10 h-10 rounded-2xl m-2' src={profilepic} alt="" />
-              vishal varghese</p>
-            <p class=" text-sm font-normal text-gray-500 mb-3">April 16, 2020</p>
-            {/* <h2 class="mb-2 text-xl font-extrabold leading-snug tracking-tight text-gray-800 md:text-3xl">
-        <a href="#" class="text-gray-900 hover:text-purple-700">Process Documents Using Artificial Intelligence For RPA Bots</a>
-      </h2> */}
+              {obj.userId.name}</p>
+            <p class=" text-sm font-normal text-gray-500 mb-3">{format(obj.createdAt)}</p>
+
             <p class="mb-4 text-base font-normal text-gray-600">
-              Earlier RPA bots used to have some limitations like it would take structured data for processing from excel, database, on these data. But with advancements in technology like OCR (Optical
-              Character Recognition) and Machine Learning, RPA bots are capable of extracting these data …
+              {obj.desc}  
             </p>
-            <img className='.max-w-full .h-auto' src={postimage} alt="" />
-            {/* <input placeholder="Co  ?" id="comment" className='bg-blue-50 mt-1 shareInput'/> */}
-            <div className='flex'>
-              <p className='text-black mx-2'><button className='bg-blue-400 w-auto p-1 rounded-2xl'>Like(24)</button></p>
-              <p className='text-blue-900 mx-2'><u>comments</u> (3)</p>
-            </div>
-            {/* comment box start */}
-            <div class="mx-auto my-10 max-w-xl rounded-xl border px-4 py-6 text-gray-700">
-              <div class="rounded-lg bg-gray-100 p-2">
-                <p class="mb-2 text-gray-500"> You <span className='text-xs'> Sep 4</span></p>
-                <p class="">Lorem ipsum dolor sit amet consectetur adipisicing elit. Officia rem eum nostrum.</p>
-              </div>
-              <div class="rounded-lg bg-gray-100 p-2">
-                <p class="flex  text-gray-500"> <img className='w-10 h-10 rounded-2xl ' src={profilepic} alt="" />
-                  <span className='mt-3'> vishal varghese</span><span className='text-xs'> Sep 4</span></p>
-                <p class="">Lorem ipsum dolor sit amet consectetur adipisicing elit. Officia rem eum nostrum.</p>
-              </div>
-            </div>
-
-            {/* comment box start */}
-
-            {/* <a href="#" class="btn btn-light btn-sm">comments</a> */}
-
-          </div>
-          {/* <div>
-      <p class="pt-12 mb-3 text-sm font-normal text-gray-500">April 16, 2020</p>
-      <h2 class="mb-2 text-xl font-extrabold leading-snug tracking-tight text-gray-800 md:text-3xl">
-        <a href="#" class="text-gray-900 hover:text-purple-700">Implement Dark Mode in Your Android App</a>
-      </h2>
-      <p class="mb-4 text-base font-normal text-gray-600">
-        Are you curious to implement the Dark Mode in Android Application? Here’s the perfect guideline to attain the Dark Mode in Android Application. Don’t waste your time; just implement and enjoy
-        Dark Mode.
-      </p>
-      <a href="#" class="btn btn-light btn-sm">Continue Reading</a>
-    </div> */}
-          <div>
-            {/* post2 start */}
-            <p class="  text-sm font-normal text-gray-500"> <img className='w-10 h-10 rounded-2xl m-2' src={profilepic} alt="" />
-              vishal varghese</p>
-            <p class=" text-sm font-normal text-gray-500 mb-3">April 16, 2020</p>
-            {/* <h2 class="mb-2 text-xl font-extrabold leading-snug tracking-tight text-gray-800 md:text-3xl">
-        <a href="#" class="text-gray-900 hover:text-purple-700">Process Documents Using Artificial Intelligence For RPA Bots</a>
-      </h2> */}
-            <p class="mb-4 text-base font-normal text-gray-600">
-              Earlier RPA bots used to have some limitations like it would take structured data for processing from excel, database, on these data. But with advancements in technology like OCR (Optical
-              Character Recognition) and Machine Learning, RPA bots are capable of extracting these data …
-            </p>
-            {/* <img className='.max-w-full .h-auto' src={postimage} alt="" /> */}
+            
+           {/* video */}
+           { obj.video &&  <video className='w-full h-96' controls src={PF+obj.video} type="video/mp4"></video>}
+            {/* image */}
+           { obj.img && <img className='.max-w-full .h-auto' src={PF+obj.img} alt="" />}
+           {/* youtubelink */}
             <div>
-
-              <iframe className='w-full h-96' src="https://www.youtube.com/embed/JKEJizRiBgQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-
+              {/* <iframe className='w-full h-96' src="https://www.youtube.com/embed/JKEJizRiBgQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe> */}
             </div>
             {/* <input placeholder="Co  ?" id="comment" className='bg-blue-50 mt-1 shareInput'/> */}
             <div className='flex'>
@@ -423,44 +370,14 @@ function Feed() {
             </div>
 
             {/* comment box start */}
-            {/* post2 end */}
-          </div>
-          <div>
-            <p class="  text-sm font-normal text-gray-500"> <img className='w-10 h-10 rounded-2xl m-2' src={profilepic} alt="" />
-              vishal varghese</p>
-            <p class=" text-sm font-normal text-gray-500 mb-3">April 16, 2020</p>
-            <p class="mb-4 text-base font-normal text-gray-600">
-              Earlier RPA bots used to have some limitations like it would take structured data for processing from excel, database, on these data. But with advancements in technology like OCR (Optical
-              Character Recognition) and Machine Learning, RPA bots are capable of extracting these data …
-            </p>
-            <video className='w-full h-96' controls src={PF+"incubation management project.mp4"} type="video/mp4"></video>
-            <div className='flex'>
-            <p className='text-black mx-2'><button className='w-auto p-1 rounded-2xl'><GrFavorite style={{backgroundColor:""}}/></button></p>
-              <p className='text-blue-900 mx-2'><u>comments</u> (3)</p>
-
-            </div>
 
           </div>
-          {/* <div>
-      <p class="pt-12 mb-3 text-sm font-normal text-gray-500">April 16, 2020</p>
-      <h2 class="mb-2 text-xl font-extrabold leading-snug tracking-tight text-gray-800 md:text-3xl">
-        <a href="#" class="text-gray-900 hover:text-purple-700">3 things you should change during your focus group interview</a>
-      </h2>
-      <p class="mb-4 text-base font-normal text-gray-600">We changed three things about our feedback sessions, and it changed everything about running customer feedback sessions.</p>
-      <a href="#" class="btn btn-light btn-sm">Continue Reading</a>
-    </div> */}
-          {/* <div>
-      <p class="pt-12 mb-3 text-sm font-normal text-gray-500">April 16, 2020</p>
-      <h2 class="mb-2 text-xl font-extrabold leading-snug tracking-tight text-gray-800 md:text-3xl">
-        <a href="#" class="text-gray-900 hover:text-purple-700">Using Webpack with React Typescript</a>
-      </h2>
-      <p class="mb-4 text-base font-normal text-gray-600">
-        Ever wondered if there is a way to just tie up all your code into one single module for easy usage. If so, in this article I will show you how to bundle all your code into a single javascript
-        module that you can easily use in any other project.
-      </p>
-      <a href="#" class="btn btn-light btn-sm">Continue Reading</a>
-    </div> */}
+          
+          
+           ) }  )}  
+       
         </div>
+        
         <div class="flex flex-col items-center justify-center pt-12 mt-12 space-x-0 space-y-2 border-t border-gray-200 md:space-x-2 md:space-y-0 md:flex-row">
           <a href="#" class="text-blue-900 w-full rounded-full btn btn-light btn-xl md:w-auto"><u> View more posts</u></a>
           {/* <a href="#" class="w-full rounded-full btn btn-light btn-xl md:w-auto">Next Page</a> */}
