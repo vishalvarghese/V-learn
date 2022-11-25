@@ -32,9 +32,15 @@ const postadminlogin = async (req, res) => {
     }
 }
 const allusers = async (req, res) => {
-    const data = await User.find();
+    try{
+        const data = await User.find();
+        // console.log(data);
+        res.json(data)
+    }catch(error){
+        console.log(error.messsage);
+    }
     // console.log(data);   
-    res.json(data)
+    
 }
 
 const blockuser = async (req, res) => {

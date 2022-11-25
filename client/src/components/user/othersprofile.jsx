@@ -8,14 +8,18 @@ import feedimg from '../../asset/feedimg.png'
 import connectionimg from '../../asset/connection.png'
 import chatimg from '../../asset/chat.png'
 import headerlogo from '../../asset/header logo.png'
-import { useSelector } from 'react-redux'
-function Profile() {
+import { useLocation } from 'react-router-dom'
+
+// import { useSelector } from 'react-redux'
+function OtherProfile(props) {
+    const other=useLocation().state.otheruser
+    // console.log(other);
   const PF = process.env.REACT_APP_PUBLIC_FOLDER
   const [showGallery, setShowGallery] = useState(true);
   const [showRequest, setShowRequest] = useState(false);
   // const [showOwnCourse, setShowOwnCourse] = useState(false);
   const [profiledrop,setprofiledrop]=useState(false)
-  const user = useSelector((state) => state.user)
+//   const user = useSelector((state) => state.user)
  
   return (
     <div>
@@ -35,7 +39,7 @@ function Profile() {
           >
             <div className='flex justify-between'>
           <div className='p-4'>
-          <a
+          {/* <a
               href="/"
               aria-label="Company"
               title="Company"
@@ -45,7 +49,7 @@ function Profile() {
               <span class="ml-2 text-xl font-bold tracking-wide text-blue-900">
                 V-learn
               </span>
-            </a>
+            </a> */}
           </div>
                  {/* navbar div here */}
                  <div className='flex justify-center p-8 text-white text-2xl'> 
@@ -102,11 +106,11 @@ function Profile() {
         
             <ul>
             {/* //profile drop start */}
-<div class="flex justify-center">
+{/* <div class="flex justify-center">
     <div class="relative inline-block mb-20">
        
         <button onClick={(e)=>{setprofiledrop(!profiledrop)}} class="relative z-10 flex items-center p-2 text-sm text-gray-600 bg-white border border-transparent rounded-md focus:border-blue-500 focus:ring-opacity-40 dark:focus:ring-opacity-40 focus:ring-blue-300 dark:focus:ring-blue-400 focus:ring dark:text-white dark:bg-gray-800 focus:outline-none">
-            <span class="mx-1">{user.name}</span>
+            <span class="mx-1">{other.name}</span>
             <svg class="w-5 h-5 mx-1" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M12 15.713L18.01 9.70299L16.597 8.28799L12 12.888L7.40399 8.28799L5.98999 9.70199L12 15.713Z" fill="currentColor"></path>
             </svg>
@@ -115,10 +119,10 @@ function Profile() {
       
 {profiledrop&&       <div class="absolute right-0 z-20 w-56 py-2 mt-2 overflow-hidden bg-white rounded-md shadow-xl dark:bg-gray-800">
             <a href="#" class="flex items-center p-3 -mt-2 text-sm text-gray-600 transition-colors duration-200 transform dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-white">
-                <img class="flex-shrink-0 object-cover mx-1 rounded-full w-9 h-9" src={PF+user.profilePicture} alt="jane avatar"/>
+                <img class="flex-shrink-0 object-cover mx-1 rounded-full w-9 h-9" src={other.profilePicture} alt="jane avatar"/>
                 <div class="mx-1">
-                    <h1 class="text-sm font-semibold text-gray-700 dark:text-gray-200">{user.name}</h1>
-                    <p class="text-sm text-gray-500 dark:text-gray-400">{user.email}</p>
+                    <h1 class="text-sm font-semibold text-gray-700 dark:text-gray-200">{other.name}</h1>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">other@email.com</p>
                 </div>
             </a>
 
@@ -161,7 +165,7 @@ function Profile() {
         </div>
         } 
     </div>
-</div>
+</div> */}
 {/* //profile drop end */}
             </ul>
             </div>
@@ -249,18 +253,18 @@ function Profile() {
                         </span>
                         <span  className="text-sm text-gray-500">Photos</span>
                       </div>
-                      <div onClick={(e)=>{setShowRequest(true);setShowGallery(!showGallery)}} className="cursor-pointer lg:mr-4 p-3 text-center">
+                      {/* <div onClick={(e)=>{setShowRequest(true);setShowGallery(!showGallery)}} className="cursor-pointer lg:mr-4 p-3 text-center">
                         <span className="text-xl font-bold block uppercase tracking-wide text-gray-700">
                           5
                         </span>
                         <span  className=" text-sm text-gray-500">Requests</span>
-                      </div>
+                      </div> */}
                     </div>
                   </div>
                 </div>
                 <div className="text-center mt-12">
                   <h3 className="text-4xl font-semibold leading-normal mb-2 text-gray-800 mb-2">
-                    {user.name}
+                  {other.name}
                   </h3>
                   <div className="text-sm leading-normal mt-0 mb-2 text-gray-500 font-bold uppercase">
                     <i className="fas fa-map-marker-alt mr-2 text-lg text-gray-500"></i>{" "}
@@ -296,7 +300,7 @@ function Profile() {
                     </div>
                        
                       {showGallery? <Gallery/>:null}
-                     {showRequest?  <Connect_requests/>:null } 
+                     {/* {showRequest?  <Connect_requests/>:null }  */}
                      <Owncourse/>                            
                   </div>
                 </div>
@@ -312,4 +316,4 @@ function Profile() {
   )
 }
 
-export default Profile
+export default OtherProfile

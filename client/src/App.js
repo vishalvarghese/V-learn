@@ -17,6 +17,9 @@ import Chatboxpage from './pages/user/chatboxpage';
 import Test from './components/user/test';
 import Gallerypage from './pages/user/gallerypage';
 import Courseviewpage from './pages/user/courseviewpage';
+import AddCourse from './pages/user/addCourse';
+import Connectionpage from './pages/user/connectionpage';
+import Otherprofilepage from './pages/user/otherprofilepage';
 function App() {
   return (
     <div className="App">
@@ -32,6 +35,9 @@ function App() {
           <Route path='/chatbox' element={<Chatboxpage/>}/>
           <Route path='/gallery' element={<Gallerypage/>}/>
           <Route path='/courseview' element={<Courseviewpage/>}/>
+          <Route path='/addCourse' element={<AddCourse/>}/>
+          <Route path='/connections' element={<Connectionpage/>}/>
+          <Route path='/otherprofile' element={<Otherprofilepage/>}/>
           {/* Admin routes */}
           <Route path='/admin' element={<Adminlogin/>}/>
           <Route path='/admindashboard' element={<Admindash/>}/>

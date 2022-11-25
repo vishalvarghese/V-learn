@@ -3,7 +3,7 @@ const mongoose= require('mongoose');
 var userschema =mongoose.Schema({
  name:String,
  email:String,
- profilePicture:String,
+ profilePicture:{type:String,default:"profilepicdefault.png"},
  coverPicture:String,
  connections:String,
  phonenumber:Number,

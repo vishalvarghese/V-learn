@@ -14,8 +14,10 @@ import openmike from '../../asset/openmikecnn.mp4'
 import pdf from '../../asset/pdf.pdf'
 import { useSelector } from 'react-redux'
 import axios from 'axios'
-import { GrFavorite } from "react-icons/gr";
-import { format, render, cancel, register } from 'timeago.js';
+import previewIcon from '../../asset/previewIcon.jpg'
+
+
+import Postdisplay from './postdisplay'
 function Feed() {
   const PF = process.env.REACT_APP_PUBLIC_FOLDER
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -24,7 +26,11 @@ function Feed() {
   const [desc, setDesc] = useState('')
   const user = useSelector((state) => state.user)
   const [post,setPost]=useState([])
+  const [previewImage,setPerviewImage]=useState('')
+  const [previewVideo,setPreviewVideo]=useState('')
+  const [previewUrl,setPreviewUrl] =useState('')
   //console.log(user);
+  const [profiledrop,setprofiledrop]=useState(false)
   const submitHandler = async (e) => {
     e.preventDefault()
     const newPost = {
@@ -77,32 +83,54 @@ function Feed() {
     })
   },[])
  console.log(post);
+ 
+ useEffect(() => {
+  if (previewImage) {
+    setPreviewUrl(URL.createObjectURL(previewImage));
+    setPreviewVideo('');
+  }
+}, [previewImage]);
+useEffect(() => {
+  if (previewVideo) {
+    setPreviewUrl(URL.createObjectURL(previewVideo));
+    setPerviewImage('');
+  }
+}, [previewVideo]);
   return (
-    <div className='bg-blue-50 feedbody'>
-      {/*feed header start*/}
-
-      <div class="bg-blue-50  feedheader">
-        <div class="px-4 py-5 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-24 lg:px-8">
-          <div class="relative flex items-center justify-between">
-            <a
+    <div>
+    <>
+     {/* <Navbar transparent /> */}
+     <main className="profile-page">
+       <section className="relative block" style={{ height: "500px" }}>
+         <div
+           className="absolute top-0 w-full h-full bg-center bg-cover"
+           style={{
+             backgroundImage:
+               "url('https://images.unsplash.com/photo-1499336315816-097655dcfbda?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2710&q=80')"
+           }}
+         >
+          <div className='flex justify-between'>
+          <div className='p-4'>
+          <a
               href="/"
               aria-label="Company"
               title="Company"
               class="inline-flex items-center"
             >
-
-
               <img className='w-20 h-20' src={headerlogo} alt="" />
               <span class="ml-2 text-xl font-bold tracking-wide text-blue-900">
                 V-learn
               </span>
             </a>
-            <div className='flex justify-between'>
+          </div>
+                 {/* navbar div here */}
+                 <div className='flex justify-center p-8 text-white text-2xl'> 
+             <div className='flex justify-between'>
               <ul class="bg-white p-2 rounded-3xl flex  items-center hidden space-x-8 lg:flex">
                 <li>
                   <a
 
-                    href="/"
+                    href="/feed"
                     aria-label="Our product"
                     title="Our product"
                     class="font-medium tracking-wide text-blue-900 transition-colors duration-200 hover:text-teal-accent-400"
@@ -115,7 +143,7 @@ function Feed() {
                 </li>
                 <li>
                   <a
-                    href="/"
+                    href="/connections"
                     aria-label="Our product"
                     title="Our product"
                     class="font-medium tracking-wide text-blue-900 transition-colors duration-200 hover:text-teal-accent-400"
@@ -142,25 +170,77 @@ function Feed() {
                 </li>
               </ul>
             </div>
-            <ul class="bg-white rounded-3xl flex items-center hidden space-x-8 lg:flex">
-              <li>
-                <a
-                  href="/profile"
-                  class="inline-flex items-center justify-center h-12 px-6 font-medium tracking-wide text-blue-900 transition duration-200 rounded bg-deep-purple-accent-400 hover:bg-deep-purple-accent-700 focus:shadow-outline focus:outline-none"
-                  aria-label="Sign up"
-                  title="Sign up"
-                >
-                  <img className='w-10 h-10 rounded-2xl m-2' src={profilepic} alt="" />
-                  Vishal Varghese
-                </a>
+            
+             </div>
+              {/* navbar div here close */}
+ 
+           <div className='p-4'>
+        
+            <ul>
+            {/* //profile drop start */}
+<div class="flex justify-center">
+    <div class="relative inline-block mb-20">
+       
+        <button onClick={(e)=>{setprofiledrop(!profiledrop)}} class="relative z-10 flex items-center p-2 text-sm text-gray-600 bg-white border border-transparent rounded-md focus:border-blue-500 focus:ring-opacity-40 dark:focus:ring-opacity-40 focus:ring-blue-300 dark:focus:ring-blue-400 focus:ring dark:text-white dark:bg-gray-800 focus:outline-none">
+            <span class="mx-1">{user.name}</span>
+            <svg class="w-5 h-5 mx-1" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 15.713L18.01 9.70299L16.597 8.28799L12 12.888L7.40399 8.28799L5.98999 9.70199L12 15.713Z" fill="currentColor"></path>
+            </svg>
+        </button>
 
+      
+{profiledrop&&       <div class="absolute right-0 z-20 w-56 py-2 mt-2 overflow-hidden bg-white rounded-md shadow-xl dark:bg-gray-800">
+            <a href="#" class="flex items-center p-3 -mt-2 text-sm text-gray-600 transition-colors duration-200 transform dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-white">
+                <img class="flex-shrink-0 object-cover mx-1 rounded-full w-9 h-9" src={PF+user.profilePicture} alt="jane avatar"/>
+                <div class="mx-1">
+                    <h1 class="text-sm font-semibold text-gray-700 dark:text-gray-200">{user.name}</h1>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">{user.email}</p>
+                </div>
+            </a>
 
-                {/* side box start */}
+            <hr class="border-gray-200 dark:border-gray-700 "/>
+            
+            <a href="/profile" class="block px-4 py-3 text-sm text-gray-600 capitalize transition-colors duration-200 transform dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-white">
+                view profile
+            </a>
+            
+            <a href="#" class="block px-4 py-3 text-sm text-gray-600 capitalize transition-colors duration-200 transform dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-white">
+                Settings
+            </a>
 
-                {/* side box end */}
+            <a href="#" class="block px-4 py-3 text-sm text-gray-600 capitalize transition-colors duration-200 transform dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-white">
+                Keyboard shortcuts
+            </a>
 
-              </li>
+            <hr class="border-gray-200 dark:border-gray-700 "/>
+            
+            <a href="#" class="block px-4 py-3 text-sm text-gray-600 capitalize transition-colors duration-200 transform dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-white">
+                Company profile
+            </a>
+
+            <a href="#" class="block px-4 py-3 text-sm text-gray-600 capitalize transition-colors duration-200 transform dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-white">
+                Team
+            </a>
+
+            <a href="#" class="block px-4 py-3 text-sm text-gray-600 capitalize transition-colors duration-200 transform dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-white">
+                Invite colleagues
+            </a>
+
+            <hr class="border-gray-200 dark:border-gray-700 "/>
+            
+            <a href="#" class="block px-4 py-3 text-sm text-gray-600 capitalize transition-colors duration-200 transform dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-white">
+                Help
+            </a>
+            <a href="#" class="block px-4 py-3 text-sm text-gray-600 capitalize transition-colors duration-200 transform dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-white">
+                Sign Out
+            </a>
+        </div>
+        } 
+    </div>
+</div>
+{/* //profile drop end */}
             </ul>
+            {/* navbar menu on minimize */}
             <div class="lg:hidden">
               <button
                 aria-label="Open Menu"
@@ -275,16 +355,115 @@ function Feed() {
                 </div>
               )}
             </div>
-          </div>
-        </div>
-      </div>
-      {/* header end */}
+              {/* navbar menu on minimize */}
+           </div>
 
-      {/* post begins */}
-      <div className='bg-white w-full px-4 py-12 mx-auto max-w-7xl md:w-3/4 lg:w-3/5'>
-        {/* kousal */}
+         
 
-        <div className='share'>
+              </div>
+           {/* <span
+             id="blackOverlay"
+             className="w-full h-full absolute opacity-50 bg-black"
+           ></span> */}
+         </div>
+         <div
+           className="top-auto bottom-0 left-0 right-0 w-full absolute pointer-events-none overflow-hidden"
+           style={{ height: "70px" }}
+         >
+           <svg
+             className="absolute bottom-0 overflow-hidden"
+             xmlns="http://www.w3.org/2000/svg"
+             preserveAspectRatio="none"
+             version="1.1"
+             viewBox="0 0 2560 100"
+             x="0"
+             y="0"
+           >
+             <polygon
+               className="text-gray-300 fill-current"
+               points="2560 0 2560 100 0 100"
+             ></polygon>
+           </svg>
+         </div>
+       </section>
+       <section className="relative py-16 bg-gray-300">
+         <div className="container mx-auto px-4">
+           <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-xl rounded-lg -mt-56 lg:-mt-96  ">
+             <div className="px-6">
+               <div className="flex flex-wrap justify-center">
+                 <div className="w-full lg:w-3/12 px-4 lg:order-2 flex justify-center">
+                   {/* <div className="relative">
+                     <img
+                       alt="..."
+                  
+                       src={profilepic}
+                       className="shadow-xl rounded-full h-auto align-middle border-none absolute -m-16 -ml-20 lg:-ml-16"
+                       style={{ maxWidth: "150px" }}
+                     />
+                   </div> */}
+                 </div>
+                 {/* <div className="w-full lg:w-4/12 px-4 lg:order-3 lg:text-right lg:self-center">
+                   <div className="py-6 px-3 mt-32 sm:mt-0">
+                     <button
+                       className="bg-blue-900 active:bg-pink-600 uppercase text-white font-bold hover:shadow-md shadow text-xs px-4 py-2 rounded outline-none focus:outline-none sm:mr-2 mb-1"
+                       type="button"
+                       style={{ transition: "all .15s ease" }}
+                     >
+                       Connect
+                     </button>
+                   </div>
+                 </div> */}
+                 {/* <div className="w-full lg:w-4/12 px-4 lg:order-1">
+                   <div className="flex justify-center py-4 lg:pt-4 pt-8">
+                     <div className="mr-4 p-3 text-center">
+                       <span className="text-xl font-bold block uppercase tracking-wide text-gray-700">
+                         22
+                       </span>
+                       <span className="text-sm text-gray-500">Connections</span>
+                     </div>
+                     <div className="mr-4 p-3 text-center">
+                       <a href="/gallery"><span className="text-xl font-bold block uppercase tracking-wide text-gray-700">
+                         10
+                       </span></a>
+                       <a href="/gallery"><span className="text-sm text-gray-500">Photos</span></a>
+                     </div>
+                     <div className="lg:mr-4 p-3 text-center">
+                       <span className="text-xl font-bold block uppercase tracking-wide text-gray-700">
+                         5
+                       </span>
+                       <span className="text-sm text-gray-500">Requests</span>
+                     </div>
+                   </div>
+                 </div> */}
+               </div>
+               <div className="text-center mt-12">
+                 {/* <h3 className="text-4xl font-semibold leading-normal mb-2 text-gray-800 mb-2">
+                   Jenna Stones
+                 </h3>
+                 <div className="text-sm leading-normal mt-0 mb-2 text-gray-500 font-bold uppercase">
+                   <i className="fas fa-map-marker-alt mr-2 text-lg text-gray-500"></i>{" "}
+                   Software Developer,Devops
+                 </div> */}
+                 {/* <div className="mb-2 text-gray-700 mt-10">
+                   <i className="fas fa-briefcase mr-2 text-lg text-gray-500"></i>
+                   Solution Manager - Creative Tim Officer
+                 </div>
+                 <div className="mb-2 text-gray-700">
+                   <i className="fas fa-university mr-2 text-lg text-gray-500"></i>
+                   University of Computer Science
+                 </div> */}
+               </div>
+               <div className="mt-10 py-1  border-gray-300 text-center">
+                 <div className="flex flex-wrap justify-center">
+                   <div className="w-full lg:w-9/12 px-2">
+                     {/* <p className="mb-4 text-lg leading-relaxed text-gray-800">
+                       An artist of considerable range, Jenna the name taken by
+                       Melbourne-raised, Brooklyn-based Nick Murphy writes,
+                       performs and records all of his own music, giving it a
+                       warm, intimate feel with a solid groove structure. An
+                       artist of considerable range.
+                     </p> */}
+                     <div className='share'>
           <div className='shareWrapper'>
             <form onSubmit={submitHandler} action="">
               <div className="shareTop">
@@ -305,93 +484,68 @@ function Feed() {
                       <label for="fileInput1">
                         <img className='w-10 h-10' id="icon" src={picimg} />
                       </label>
-                      <input hidden id="fileInput1" name='imageFile' type="file" onChange={(e) => setImageFile(e.target.files[0])}></input>
-                      {/* <img className='w-10 h-10' src={picimg} alt="" /> */}
+                      <input hidden  id="fileInput1" name='imageFile' type="file" onChange={(e) => {setImageFile(e.target.files[0]);setPerviewImage(e.target.files[0]);}}></input>
+                      {/* <img id="uploadPreview" style="width: 100px; height: 100px;" /> */}
+                     
                     </span>
                     <span className='mx-4 shareOptionText'>
                       <label for="fileInput2">
                         <img className='w-10 h-10' id="icon" src={videoimg} />
                       </label>
-                      <input hidden id="fileInput2" name='videoFile' type="file" onChange={(e)=>{setVideoFile(e.target.files[0])}}></input>
+                      <input hidden id="fileInput2" name='videoFile' type="file" onChange={(e)=>{setVideoFile(e.target.files[0]);setPreviewVideo(e.target.files[0]);}}></input>
                       {/* <img className='w-10 h-10' src={videoimg} alt="" /> */}
                     </span>
                   </div>
+                
                 </div>
 
                 <button type='submit' className='shareButton'><img className='w-10 h-10' src={sendicon} alt="" /></button>
               </div>
+                
             </form>
           </div>
+          
         </div>
         {/* kousal */}
-      </div>
-      <section class=" bg-white w-full px-4  mx-auto max-w-7xl md:w-3/4 lg:w-3/5">
+
+    {/* perview box */}
+      {previewImage &&<div className='flex justify-center border-collapse m-10'><img className='w-25 h-20' src={previewIcon} alt="" /> <img className='w-96 h-80' src={previewUrl} alt="" /></div>}
+     {previewVideo &&<div className='flex justify-center border-collapse m-10'><img className='w-25 h-20' src={previewIcon} alt="" /><video className='w-96 h-80' controls src={previewUrl} type="video/mp4"></video></div> }
 
 
-
-        <div class="flex flex-col divide-y divide-gray-200">
+        {/* space starts */}
+      
+        <div className='text-left mt-9'>
         {
                post.map((obj)=>{
                     return(  
-          
-          <div>
-            <p class="  text-sm font-normal text-gray-500"> <img className='w-10 h-10 rounded-2xl m-2' src={profilepic} alt="" />
-              {obj.userId.name}</p>
-            <p class=" text-sm font-normal text-gray-500 mb-3">{format(obj.createdAt)}</p>
-
-            <p class="mb-4 text-base font-normal text-gray-600">
-              {obj.desc}  
-            </p>
-            
-           {/* video */}
-           { obj.video &&  <video className='w-full h-96' controls src={PF+obj.video} type="video/mp4"></video>}
-            {/* image */}
-           { obj.img && <img className='.max-w-full .h-auto' src={PF+obj.img} alt="" />}
-           {/* youtubelink */}
-            <div>
-              {/* <iframe className='w-full h-96' src="https://www.youtube.com/embed/JKEJizRiBgQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe> */}
-            </div>
-            {/* <input placeholder="Co  ?" id="comment" className='bg-blue-50 mt-1 shareInput'/> */}
-            <div className='flex'>
-              <p className='text-black mx-2'><button className='bg-blue-400 w-auto p-1 rounded-2xl'>like(24)</button></p>
-              <p className='text-blue-900 mx-2 '><u>comments</u> (3)</p>
-            </div>
-            {/* comment box start */}
-            <div class="mx-auto my-10 max-w-xl rounded-xl border px-4 py-6 text-gray-700">
-              <div class="rounded-lg bg-gray-100 p-2">
-                <p class="mb-2 text-gray-500"> You <span className='text-xs'> Sep 4</span></p>
-                <p class="">Lorem ipsum dolor sit amet consectetur adipisicing elit. Officia rem eum nostrum.</p>
-              </div>
-              <div class="rounded-lg bg-gray-100 p-2">
-                <p class="flex  text-gray-500"> <img className='w-10 h-10 rounded-2xl ' src={profilepic} alt="" />
-                  <span className='mt-3'> vishal varghese</span><span className='text-xs'> Sep 4</span></p>
-                <p class="">Lorem ipsum dolor sit amet consectetur adipisicing elit. Officia rem eum nostrum.</p>
-              </div>
-            </div>
-
-            {/* comment box start */}
-
-          </div>
-          
+          <Postdisplay obj={obj}/>
           
            ) }  )}  
-       
         </div>
+        {/* space ends */}
+               
+                   </div>
+                
+                 
+                
+                 </div>
+                  {/* space ends */}
+                 {/* <div><h1>helokasodas</h1></div> */}
+             
         
-        <div class="flex flex-col items-center justify-center pt-12 mt-12 space-x-0 space-y-2 border-t border-gray-200 md:space-x-2 md:space-y-0 md:flex-row">
-          <a href="#" class="text-blue-900 w-full rounded-full btn btn-light btn-xl md:w-auto"><u> View more posts</u></a>
-          {/* <a href="#" class="w-full rounded-full btn btn-light btn-xl md:w-auto">Next Page</a> */}
-        </div>
-      </section>
-
-
-      {/* post ends */}
-
-      <div className='w-auto mt-9 bg-slate-300'>
-        <img className='w-36 h-36 ' src={Vlearnlogo} alt="" />
-      </div>
-
-    </div>
+        
+                  {/* soace ends */}
+               </div>
+               
+             </div>
+           </div>
+         </div>
+       </section>
+     </main>
+     {/* <Footer /> */}
+   </>
+   </div>
   )
 }
 

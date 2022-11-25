@@ -3,6 +3,8 @@ const User=require("../../modal/userschema")
 const bcrypt =require('bcrypt')
 const jwt = require("jsonwebtoken")
 const Post=require("../../modal/postschema")
+const CommentSchema=require('../../modal/commentschema');
+const CommentModel = require("../../modal/commentschema");
 const postSignup = async (req, res) => {
     try {
         // console.log({ ...req.body });
@@ -58,7 +60,7 @@ const login = async (req, res) => {
 }
 
 const addpost= async(req,res)=>{
-    console.log(req.body);
+    // console.log(req.body);
     const newPost=new Post(req.body)
     try {
       const savedPost=await newPost.save()
@@ -72,7 +74,7 @@ const addpost= async(req,res)=>{
 const getpost=async(req,res)=>{
    try{
     const allpost=await Post.find().populate('userId').sort({_id:-1});
-    console.log(allpost);   
+    // console.log(allpost);   
     res.json(allpost)
    }catch(error)
    {
@@ -80,4 +82,57 @@ const getpost=async(req,res)=>{
    }
 }
 
-module.exports={postSignup,login,addpost,getpost}
+const newComment=async(req,res)=>{
+   try{
+    const newComment=new CommentSchema(req.body)
+    const savedComment=await newComment.save()
+    res.json(savedComment)   
+}catch(error)
+   {
+    console.log(error);
+   }
+    
+}
+const getComment=async(req,res)=>{
+    console.log(req.params.id);
+    try{
+     const allComment=await CommentModel.find({ postId: req.params.id}).populate('userId').sort({_id:1});
+      console.log(allComment);   
+     res.json(allComment)
+    }catch(error)
+    {
+     console.log(error);
+    }
+ }
+ 
+ const likePost=async(req,res)=>{
+    console.log(req.body.userId);
+    console.log(req.params.id);
+    try{
+        console.log('like');
+        const post=await Post.findById(req.params.id)
+        console.log(post);
+        if(!post.likes.includes(req.body.userId)){
+            await post.updateOne({$push:{likes:req.body.userId}})
+            res.json("The post has been liked")
+
+        }else{
+            await post.updateOne({$pull:{likes:req.body.userId}}) 
+            res.json("The post has been unliked")
+        }
+    }catch(error){
+        res.json(error)
+    }
+   }
+
+   const visituser=async(req,res)=>{
+    console.log(req.params.id);
+    try{
+      const otherUser= await User.find({_id:req.params.id})
+      console.log(otherUser);
+      res.json(otherUser)
+       }catch(error){
+        console.log(error);
+    }
+   }
+module.exports={postSignup,login,addpost,getpost,newComment,getComment,likePost,visituser}
