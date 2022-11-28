@@ -39,7 +39,7 @@ const login = async (req, res) => {
     }
     else {
         const auth = await bcrypt.compare(password, user.password);
-        console.log(auth, "klklk");
+        // console.log(auth, "klklk");
         if (auth) {
             console.log("entered");
             //token generation
@@ -135,4 +135,15 @@ const getComment=async(req,res)=>{
         console.log(error);
     }
    }
-module.exports={postSignup,login,addpost,getpost,newComment,getComment,likePost,visituser}
+   
+   const getUserData= async(req,res)=>{
+    console.log(req.params.id);
+    try{
+    const userDetail=await User.find({_id:req.params.id})
+    console.log(userDetail);
+    res.json(userDetail)
+    } catch(error){
+       console.log(error); 
+    }
+   }
+module.exports={getUserData,postSignup,login,addpost,getpost,newComment,getComment,likePost,visituser}

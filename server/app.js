@@ -12,7 +12,8 @@ connectdb()
 
 var adminRouter = require('./routes/admin');
 var usersRouter = require('./routes/users');
-
+var ChatRoute=require('./routes/ChatRoute')
+var MessageRoute=require('./routes/MessageRoute')
 var app = express();
 //cors setup
 var cors=require('cors')
@@ -35,6 +36,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', adminRouter);
 app.use('/', usersRouter);
+app.use('/chat',ChatRoute);
+app.use('/message',MessageRoute);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
