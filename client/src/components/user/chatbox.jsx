@@ -1,14 +1,47 @@
-import React,{useState} from 'react'
+import React,{useState,useRef} from 'react'
 import './chatbox.css'
 import {useSelector} from "react-redux"
 import { useEffect } from 'react'
 import { userChats } from '../../api/chatRequest'
 import Conversation from '../../components/user/conversation'
 import CurrentChat from './currentChat'
+import InputEmoji from 'react-input-emoji'
+import {IoIosSend} from 'react-icons/io'
+import {io} from 'socket.io-client'
+import { TiMessages } from 'react-icons/ti'
+
 function Chatbox() {
 const[chats,setChats]=useState([])
 const [currentChat,setCurrentChat]=useState(null)
 const user = useSelector((state) => state.user)
+// const [newMessage,setNewMessage]= useState("")
+// const [Messages,setMessages]=useState([])
+const [onlineUsers,setOnlineUsers]=useState([])
+const [sendMessage,setSendMessage]=useState(null)
+const [recieveMessage,setRecieverMessage]= useState(null)
+
+const socket =useRef()
+
+console.log(sendMessage,"senddde msgsgshsh");
+
+
+useEffect(()=>{
+socket.current =io('http://localhost:8800')
+socket.current.emit("new-user-add",user._id)
+socket.current.on('get-users',(users)=>{
+  setOnlineUsers(users);
+  // console.log(onlineUsers)
+})
+},[user])
+
+
+//send message to socket server
+useEffect(()=>{
+  if(sendMessage!==null)
+  socket.current.emit('send-message',sendMessage) 
+  },[sendMessage])
+
+console.log(sendMessage,"senddde msgsgshsh");
 
 useEffect(()=>{
   const getChats =async()=>{
@@ -23,13 +56,27 @@ useEffect(()=>{
   }
   getChats()
 },[user])
+
+//receive message from socket server
+useEffect(()=>{
+  socket.current.on("recieve-message",(data)=>{
+   setRecieverMessage(data) 
+  })
+  },[])
+
+  const checkOnlineStatus =(chat)=>{
+    const chatMember =chat.members.find((member)=>member!== user._id)
+    const online= onlineUsers.find((user)=> user.userId === chatMember)
+    return online?true:false
+  }
+
 return (
     <div>
       <body>
     <div class="h-screen chatscreen p-5">
       <section class=" shadow-xl rounded-md w-full lg:w-11/12 lg:mx-auto flex">
         {/* <!-- Left section --> */}
-        <div class="w-full md:w-3/6 lg:w-3/6 xl:w-3/6 flex flex-col justify-start items-stretch  bg-white bg-opacity-80 rounded-md lg:rounded-none lg:rounded-l-md p-3">
+        <div class=" sm:2/6 md:w-3/6 lg:w-3/6 xl:w-3/6 flex flex-col justify-start items-stretch  bg-white bg-opacity-80 rounded-md lg:rounded-none lg:rounded-l-md p-3">
           <div class="flex flex-row justify-between items-center mb-4">
             {/* <div class="flex flex-row">
               <button class="bg-red-500 text-white rounded-full p-1 mr-2 cursor-pointer h-4 w-4 focus:outline-none focus:ring" aria-label="Close">
@@ -40,70 +87,30 @@ return (
               </button>
             </div> */}
             <div class="p-1 rounded-full text-gray-500">
-              <button class="flex flex-col justify-center items-center p-2 rounded-full focus:ring-2 hover:bg-gray-50 hover:bg-opacity-30 focus:outline-none" aria-label="Add">
+            
+            
+              {/* <button class="flex flex-col justify-center items-center p-2 rounded-full focus:ring-2 hover:bg-gray-50 hover:bg-opacity-30 focus:outline-none" aria-label="Add">
                 <svg class="fill-current h-4 w-4" viewBox="0 0 25 25">
                   <path d="M11 11v-11h1v11h11v1h-11v11h-1v-11h-11v-1h11z"/>
                 </svg>
-              </button>
+              </button> */}
             </div>
           </div>
           <div class="flex-auto flex flex-col">
             <div class="flex-auto flex flex-row">
               <div class="p-1 flex flex-col justify-between items-center">
                 <div class="">
-                  <div class="p-1 flex justify-center items-center text-gray-500 cursor-pointer">
+                  <div class="sm:hidden p-1 flex justify-center items-center text-gray-500 cursor-pointer">
                     <button class="flex flex-col justify-center items-center w-full p-1 rounded-lg hover:bg-gray-50 hover:bg-opacity-30 focus:outline-none focus:ring" aria-label="Hamburger menu">
-                      <svg class="fill-current h-5 w-5" viewBox="0 0 20 20">
+                      {/* <svg class="fill-current h-5 w-5" viewBox="0 0 20 20">
                         <path d="M3.314,4.8h13.372c0.41,0,0.743-0.333,0.743-0.743c0-0.41-0.333-0.743-0.743-0.743H3.314
                           c-0.41,0-0.743,0.333-0.743,0.743C2.571,4.467,2.904,4.8,3.314,4.8z M16.686,15.2H3.314c-0.41,0-0.743,0.333-0.743,0.743
                           s0.333,0.743,0.743,0.743h13.372c0.41,0,0.743-0.333,0.743-0.743S17.096,15.2,16.686,15.2z M16.686,9.257H3.314
                           c-0.41,0-0.743,0.333-0.743,0.743s0.333,0.743,0.743,0.743h13.372c0.41,0,0.743-0.333,0.743-0.743S17.096,9.257,16.686,9.257z"></path>
-                      </svg>
+                      </svg> */}
                     </button>
                   </div>
-                  <ul class="">
-                    <li class="my-2 text-gray-900 cursor-pointer">
-                      <button class="flex flex-col justify-center items-center w-full p-2 rounded-lg bg-gray-600 bg-opacity-10 focus:outline-none focus:ring relative">
-                        <svg class="fill-current h-7 w-7" viewBox="0 0 20 20">
-                          <path d="M17.659,3.681H8.468c-0.211,0-0.383,0.172-0.383,0.383v2.681H2.341c-0.21,0-0.383,0.172-0.383,0.383v6.126c0,0.211,0.172,0.383,0.383,0.383h1.532v2.298c0,0.566,0.554,0.368,0.653,0.27l2.569-2.567h4.437c0.21,0,0.383-0.172,0.383-0.383v-2.681h1.013l2.546,2.567c0.242,0.249,0.652,0.065,0.652-0.27v-2.298h1.533c0.211,0,0.383-0.172,0.383-0.382V4.063C18.042,3.853,17.87,3.681,17.659,3.681 M11.148,12.87H6.937c-0.102,0-0.199,0.04-0.27,0.113l-2.028,2.025v-1.756c0-0.211-0.172-0.383-0.383-0.383H2.724V7.51h5.361v2.68c0,0.21,0.172,0.382,0.383,0.382h2.68V12.87z M17.276,9.807h-1.533c-0.211,0-0.383,0.172-0.383,0.383v1.755L13.356,9.92c-0.07-0.073-0.169-0.113-0.27-0.113H8.851v-5.36h8.425V9.807z"></path>
-                        </svg>
-                        <p class="text-xs font-semibold">All chats</p>
-                        <span class="bg-blue-600 w-4 h-4 text-xs rounded-full text-white font-semibold absolute right-3 top-1">2</span>
-                      </button>
-                    </li>
-                    <li class="my-2 text-gray-500">
-                      <button class="flex flex-col justify-center items-center w-full p-2 rounded-lg hover:bg-gray-50 hover:bg-opacity-30 focus:outline-none focus:ring">
-                        <svg class="fill-current h-7 w-78" viewBox="0 0 20 20">
-                          <path d="M17.657,2.982H2.342c-0.234,0-0.425,0.191-0.425,0.426v10.21c0,0.234,0.191,0.426,0.425,0.426h3.404v2.553c0,0.397,0.48,0.547,0.725,0.302l2.889-2.854h8.298c0.234,0,0.426-0.191,0.426-0.426V3.408C18.083,3.174,17.892,2.982,17.657,2.982M17.232,13.192H9.185c-0.113,0-0.219,0.045-0.3,0.124l-2.289,2.262v-1.96c0-0.233-0.191-0.426-0.425-0.426H2.767V3.833h14.465V13.192z M10,7.237c-0.821,0-1.489,0.668-1.489,1.489c0,0.821,0.668,1.489,1.489,1.489c0.821,0,1.488-0.668,1.488-1.489C11.488,7.905,10.821,7.237,10,7.237 M10,9.364c-0.352,0-0.638-0.288-0.638-0.638c0-0.351,0.287-0.638,0.638-0.638c0.351,0,0.638,0.287,0.638,0.638C10.638,9.077,10.351,9.364,10,9.364 M14.254,7.237c-0.821,0-1.489,0.668-1.489,1.489c0,0.821,0.668,1.489,1.489,1.489s1.489-0.668,1.489-1.489C15.743,7.905,15.075,7.237,14.254,7.237 M14.254,9.364c-0.351,0-0.638-0.288-0.638-0.638c0-0.351,0.287-0.638,0.638-0.638c0.352,0,0.639,0.287,0.639,0.638C14.893,9.077,14.605,9.364,14.254,9.364 M5.746,7.237c-0.821,0-1.489,0.668-1.489,1.489c0,0.821,0.668,1.489,1.489,1.489c0.821,0,1.489-0.668,1.489-1.489C7.234,7.905,6.566,7.237,5.746,7.237 M5.746,9.364c-0.351,0-0.638-0.288-0.638-0.638c0-0.351,0.287-0.638,0.638-0.638c0.351,0,0.638,0.287,0.638,0.638C6.384,9.077,6.096,9.364,5.746,9.364"></path>
-                        </svg>
-                        <p class="text-xs font-semibold">Unread</p>
-                      </button>
-                    </li>
-                    {/* <li class="my-2 text-gray-500">
-                      <button class="flex flex-col justify-center items-center w-full p-2 rounded-lg hover:bg-gray-50 hover:bg-opacity-30 focus:outline-none focus:ring">
-                        <svg class="fill-current h-7 w-7" viewBox="0 0 20 20">
-                          <path d="M10,10.9c2.373,0,4.303-1.932,4.303-4.306c0-2.372-1.93-4.302-4.303-4.302S5.696,4.223,5.696,6.594C5.696,8.969,7.627,10.9,10,10.9z M10,3.331c1.801,0,3.266,1.463,3.266,3.263c0,1.802-1.465,3.267-3.266,3.267c-1.8,0-3.265-1.465-3.265-3.267C6.735,4.794,8.2,3.331,10,3.331z"></path>
-                          <path d="M10,12.503c-4.418,0-7.878,2.058-7.878,4.685c0,0.288,0.231,0.52,0.52,0.52c0.287,0,0.519-0.231,0.519-0.52c0-1.976,3.132-3.646,6.84-3.646c3.707,0,6.838,1.671,6.838,3.646c0,0.288,0.234,0.52,0.521,0.52s0.52-0.231,0.52-0.52C17.879,14.561,14.418,12.503,10,12.503z"></path>
-                        </svg>
-                        <p class="text-xs font-semibold">Personal</p>
-                      </button>
-                    </li> */}
-                    {/* <li class="my-2 text-gray-500">
-                      <button class="flex flex-col justify-center items-center w-full p-2 rounded-lg hover:bg-gray-50 hover:bg-opacity-30 focus:outline-none focus:ring">
-                        <svg class="fill-current h-7 w-7" viewBox="0 0 20 20">
-                          <path d="M15.808,14.066H6.516v-1.162H5.354v1.162H4.193c-0.321,0-0.581,0.26-0.581,0.58s0.26,0.58,0.581,0.58h1.162
-                            v1.162h1.162v-1.162h9.292c0.32,0,0.58-0.26,0.58-0.58S16.128,14.066,15.808,14.066z M15.808,9.419h-1.742V8.258h-1.162v1.161
-                            h-8.71c-0.321,0-0.581,0.26-0.581,0.581c0,0.321,0.26,0.581,0.581,0.581h8.71v1.161h1.162v-1.161h1.742
-                            c0.32,0,0.58-0.26,0.58-0.581C16.388,9.679,16.128,9.419,15.808,9.419z M17.55,0.708H2.451c-0.962,0-1.742,0.78-1.742,1.742v15.1
-                            c0,0.961,0.78,1.74,1.742,1.74H17.55c0.962,0,1.742-0.779,1.742-1.74v-15.1C19.292,1.488,18.512,0.708,17.55,0.708z M18.13,17.551
-                            c0,0.32-0.26,0.58-0.58,0.58H2.451c-0.321,0-0.581-0.26-0.581-0.58v-15.1c0-0.321,0.26-0.581,0.581-0.581H17.55
-                            c0.32,0,0.58,0.26,0.58,0.581V17.551z M15.808,4.774H9.419V3.612H8.258v1.162H4.193c-0.321,0-0.581,0.26-0.581,0.581
-                            s0.26,0.581,0.581,0.581h4.065v1.162h1.161V5.935h6.388c0.32,0,0.58-0.26,0.58-0.581S16.128,4.774,15.808,4.774z"></path>
-                        </svg>
-                        <p class="text-xs font-semibold">Edit</p>
-                      </button>
-                    </li> */}
-                  </ul>
+       
                 </div>
                 {/* <ul>
                   <li class="my-2 text-gray-500">
@@ -151,14 +158,16 @@ return (
                   {
                   chats.map((chat)=>(
                     <div onClick={()=>{setCurrentChat(chat)}}>
-                   <Conversation data={chat} currentUserId={user._id} />
+                  
+                 <Conversation data={chat} currentUserId={user._id} online={checkOnlineStatus(chat)} />
+                  
                    </div>
                   ))
                   }
                   {/* converstaion end */}
                 
                 
-                  <li class="my-2 p-2 flex flex-row bg-blue-500 rounded-lg cursor-pointer">
+                  {/* <li class="my-2 p-2 flex flex-row bg-blue-500 rounded-lg cursor-pointer">
                   <img class="w-12 h-12 mr-4 rounded-full" src="https://www.statnews.com/wp-content/uploads/2018/01/AdobeStock_107381486-645x645.jpeg" alt="" />
                                        <div class="w-full flex flex-col justify-center text-white">
                       <div class="flex flex-row justify-between">
@@ -169,119 +178,8 @@ return (
                         <p class="text-xs">There are many variations of passages...</p>
                       </div>
                     </div>
-                  </li>
-                  {/* <li class="my-2 p-2 flex flex-row cursor-pointer rounded-lg hover:bg-gray-50 hover:bg-opacity-50">
-                    <img class="w-12 h-12 mr-4 rounded-full" src="https://www.telegraph.co.uk/multimedia/archive/03249/archetypal-female-_3249633c.jpg" alt="" />
-                    <div class="w-full flex flex-col justify-center">
-                      <div class="flex flex-row justify-between">
-                        <h2 class="text-xs font-bold">Angela Vang</h2>
-                        <div class="text-xs flex flex-row">
-                          <svg class="w-4 h-4 text-blue-600 fill-current mr-1" viewBox="0 0 20 20">
-                            <path d="M7.629,14.566c0.125,0.125,0.291,0.188,0.456,0.188c0.164,0,0.329-0.062,0.456-0.188l8.219-8.221c0.252-0.252,0.252-0.659,0-0.911c-0.252-0.252-0.659-0.252-0.911,0l-7.764,7.763L4.152,9.267c-0.252-0.251-0.66-0.251-0.911,0c-0.252,0.252-0.252,0.66,0,0.911L7.629,14.566z"></path>
-                          </svg>
-                          <span class="text-gray-400">
-                            10:45
-                          </span>
-                        </div>
-                      </div>
-                      <div class="flex flex-row justify-between items-center">
-                        <p class="text-xs text-gray-500">Sudden looked elinor off gay estate...</p>
-                      </div>
-                    </div>
-                  </li>   */}
-                  {/* <li class="my-2 p-2 flex flex-row cursor-pointer rounded-lg hover:bg-gray-50 hover:bg-opacity-50">
-                    <img class="w-12 h-12 mr-4 rounded-full" src="https://www.telegraph.co.uk/multimedia/archive/03249/archetypal-female-_3249633c.jpg" alt="" />
-                    <div class="w-full flex flex-col justify-center">
-                      <div class="flex flex-row justify-between">
-                        <h2 class="text-xs font-bold">Angela Vang</h2>
-                        <div class="text-xs flex flex-row">
-                          <svg class="w-4 h-4 text-blue-600 fill-current mr-1" viewBox="0 0 20 20">
-                            <path d="M7.629,14.566c0.125,0.125,0.291,0.188,0.456,0.188c0.164,0,0.329-0.062,0.456-0.188l8.219-8.221c0.252-0.252,0.252-0.659,0-0.911c-0.252-0.252-0.659-0.252-0.911,0l-7.764,7.763L4.152,9.267c-0.252-0.251-0.66-0.251-0.911,0c-0.252,0.252-0.252,0.66,0,0.911L7.629,14.566z"></path>
-                          </svg>
-                          <span class="text-gray-400">
-                            10:45
-                          </span>
-                        </div>
-                      </div>
-                      <div class="flex flex-row justify-between items-center">
-                        <p class="text-xs text-gray-500">Sudden looked elinor off gay estate...</p>
-                      </div>
-                    </div>
-                  </li>      */}
-                    {/* <li class="my-2 p-2 flex flex-row cursor-pointer rounded-lg hover:bg-gray-50 hover:bg-opacity-50">
-                    <img class="w-12 h-12 mr-4 rounded-full" src="https://www.telegraph.co.uk/multimedia/archive/03249/archetypal-female-_3249633c.jpg" alt="" />
-                    <div class="w-full flex flex-col justify-center">
-                      <div class="flex flex-row justify-between">
-                        <h2 class="text-xs font-bold">Angela Vang</h2>
-                        <div class="text-xs flex flex-row">
-                          <svg class="w-4 h-4 text-blue-600 fill-current mr-1" viewBox="0 0 20 20">
-                            <path d="M7.629,14.566c0.125,0.125,0.291,0.188,0.456,0.188c0.164,0,0.329-0.062,0.456-0.188l8.219-8.221c0.252-0.252,0.252-0.659,0-0.911c-0.252-0.252-0.659-0.252-0.911,0l-7.764,7.763L4.152,9.267c-0.252-0.251-0.66-0.251-0.911,0c-0.252,0.252-0.252,0.66,0,0.911L7.629,14.566z"></path>
-                          </svg>
-                          <span class="text-gray-400">
-                            10:45
-                          </span>
-                        </div>
-                      </div>
-                      <div class="flex flex-row justify-between items-center">
-                        <p class="text-xs text-gray-500">Sudden looked elinor off gay estate...</p>
-                      </div>
-                    </div>
                   </li> */}
-                           {/* <li class="my-2 p-2 flex flex-row cursor-pointer rounded-lg hover:bg-gray-50 hover:bg-opacity-50">
-                    <img class="w-12 h-12 mr-4 rounded-full" src="https://www.telegraph.co.uk/multimedia/archive/03249/archetypal-female-_3249633c.jpg" alt="" />
-                    <div class="w-full flex flex-col justify-center">
-                      <div class="flex flex-row justify-between">
-                        <h2 class="text-xs font-bold">Angela Vang</h2>
-                        <div class="text-xs flex flex-row">
-                          <svg class="w-4 h-4 text-blue-600 fill-current mr-1" viewBox="0 0 20 20">
-                            <path d="M7.629,14.566c0.125,0.125,0.291,0.188,0.456,0.188c0.164,0,0.329-0.062,0.456-0.188l8.219-8.221c0.252-0.252,0.252-0.659,0-0.911c-0.252-0.252-0.659-0.252-0.911,0l-7.764,7.763L4.152,9.267c-0.252-0.251-0.66-0.251-0.911,0c-0.252,0.252-0.252,0.66,0,0.911L7.629,14.566z"></path>
-                          </svg>
-                          <span class="text-gray-400">
-                            10:45
-                          </span>
-                        </div>
-                      </div>
-                      <div class="flex flex-row justify-between items-center">
-                        <p class="text-xs text-gray-500">Sudden looked elinor off gay estate...</p>
-                      </div>
-                    </div>
-                  </li> */}
-                  {/* <li class="my-2 p-2 flex flex-row cursor-pointer rounded-lg hover:bg-gray-50 hover:bg-opacity-50">
-                    <img class="w-12 h-12 mr-4 rounded-full" src="https://wallstreetinsanity.com/wp-content/uploads/This-Survey-Shows-Us-How-Different-Men-And-Women-View-The-Perfect-Female-Face-.jpg" alt="" />
-                    <div class="w-full flex flex-col justify-center">
-                      <div class="flex flex-row justify-between">
-                        <h2 class="text-xs font-bold">Olivia</h2>
-                        <div class="text-xs flex flex-row">
-                          <span class="text-gray-400">
-                            10:45
-                          </span>
-                        </div>
-                      </div>
-                      <div class="flex flex-row justify-between items-center">
-                        <p class="text-xs text-gray-500">Breakfast agreeable incommode depar...</p>
-                      </div>
-                    </div>
-                  </li> */}
-                  {/* <li class="my-2 p-2 flex flex-row cursor-pointer rounded-lg hover:bg-gray-50 hover:bg-opacity-50">
-                    <img class="w-12 h-12 mr-4 rounded-full" src="https://www.statnews.com/wp-content/uploads/2018/01/AdobeStock_107381486-645x645.jpeg" alt="" />
-                    <div class="w-full flex flex-col justify-center">
-                      <div class="flex flex-row justify-between">
-                        <h2 class="text-xs font-bold">Yaeko Lindblom</h2>
-                        <div class="text-xs flex flex-row">
-                          <svg class="w-4 h-4 text-blue-600 fill-current mr-1" viewBox="0 0 19 14">
-                            <path fill-rule="nonzero" d="M4.96833846,10.0490996 L11.5108251,2.571972 C11.7472185,2.30180819 12.1578642,2.27443181 12.428028,2.51082515 C12.6711754,2.72357915 12.717665,3.07747757 12.5522007,3.34307913 L12.4891749,3.428028 L5.48917485,11.428028 C5.2663359,11.6827011 4.89144111,11.7199091 4.62486888,11.5309823 L4.54038059,11.4596194 L1.54038059,8.45961941 C1.2865398,8.20577862 1.2865398,7.79422138 1.54038059,7.54038059 C1.7688373,7.31192388 2.12504434,7.28907821 2.37905111,7.47184358 L2.45961941,7.54038059 L4.96833846,10.0490996 L11.5108251,2.571972 L4.96833846,10.0490996 Z M9.96833846,10.0490996 L16.5108251,2.571972 C16.7472185,2.30180819 17.1578642,2.27443181 17.428028,2.51082515 C17.6711754,2.72357915 17.717665,3.07747757 17.5522007,3.34307913 L17.4891749,3.428028 L10.4891749,11.428028 C10.2663359,11.6827011 9.89144111,11.7199091 9.62486888,11.5309823 L9.54038059,11.4596194 L8.54038059,10.4596194 C8.2865398,10.2057786 8.2865398,9.79422138 8.54038059,9.54038059 C8.7688373,9.31192388 9.12504434,9.28907821 9.37905111,9.47184358 L9.45961941,9.54038059 L9.96833846,10.0490996 L16.5108251,2.571972 L9.96833846,10.0490996 Z"></path>
-                          </svg>
-                          <span class="text-gray-400">
-                            10:45
-                          </span>
-                        </div>
-                      </div>
-                      <div class="flex flex-row justify-between items-center">
-                        <p class="text-xs text-gray-500">New the her nor case that lady paid...</p>
-                        <span class="text-sm bg-blue-500 rounded-full w-5 h-5 text-center text-white font-bold">1</span>
-                      </div>
-                    </div>
-                  </li> */}
+                
                 </ul>
                 </div>
               </div>
@@ -289,12 +187,12 @@ return (
           </div>
         </div>
         {/* <!-- Middle section --> */}
-        <div class="hidden w-3/6 bg-white h-full md:flex flex-col justify-start items-stretch border-r-2 border-l-2 border-gray-100 lg:rounded-r-md xl:rounded-none">
+        <div class="sm:w-4/6 bg-white h-full md:flex flex-col justify-start items-stretch border-r-2 border-l-2 border-gray-100 lg:rounded-r-md xl:rounded-none">
           {/* <!-- Header with name --> */}
-          <div class="flex flex-row items-center justify-between px-3 py-2 bg-gray-50 bg-opacity-40 border-b-2 border-gray-100">
+          {/* <div class="flex flex-row items-center justify-between px-3 py-2 bg-gray-50 bg-opacity-40 border-b-2 border-gray-100">
             <div class="">
-              <h2 class="font-medium">Alexa Androz</h2>
-              {/* <p class="text-xs text-gray-500">4 memebres</p> */}
+              <h2 class="font-medium p-2">Alexa Androz</h2>
+            
             </div>
             <div class="flex flex-row">
               <button type="button" class="p-2 ml-2 text-gray-400 rounded-full hover:text-gray-600 hover:bg-gray-100 focus:outline-none focus:ring" aria-label="Search">
@@ -313,35 +211,57 @@ return (
                 </svg>
               </button>
             </div>
-          </div>
+          </div> */}
           {/* <!-- Messages --> */}
-          <CurrentChat chat={currentChat} currentUser={user._id}/>
-          {/* <!-- Input for writing a messages --> */}
-          <div class="flex flex-row justify-between items-center p-3">
-            <div class="">
-              <button type="button" class="p-2 text-gray-400 rounded-full hover:text-gray-600 hover:bg-gray-100 focus:outline-none focus:ring" aria-label="Upload a files">
-                <svg class="fill-current h-6 w-6" viewBox="0 0 20 20">
-                  <path d="M4.317,16.411c-1.423-1.423-1.423-3.737,0-5.16l8.075-7.984c0.994-0.996,2.613-0.996,3.611,0.001C17,4.264,17,5.884,16.004,6.88l-8.075,7.984c-0.568,0.568-1.493,0.569-2.063-0.001c-0.569-0.569-0.569-1.495,0-2.064L9.93,8.828c0.145-0.141,0.376-0.139,0.517,0.005c0.141,0.144,0.139,0.375-0.006,0.516l-4.062,3.968c-0.282,0.282-0.282,0.745,0.003,1.03c0.285,0.284,0.747,0.284,1.032,0l8.074-7.985c0.711-0.71,0.711-1.868-0.002-2.579c-0.711-0.712-1.867-0.712-2.58,0l-8.074,7.984c-1.137,1.137-1.137,2.988,0.001,4.127c1.14,1.14,2.989,1.14,4.129,0l6.989-6.896c0.143-0.142,0.375-0.14,0.516,0.003c0.143,0.143,0.141,0.374-0.002,0.516l-6.988,6.895C8.054,17.836,5.743,17.836,4.317,16.411"></path>
-                </svg>
-              </button>
-            </div>
-            <div class="flex-1 px-3">
-              <input type="text" class="w-full border-2 border-gray-100 rounded-full px-4 py-1 outline-none text-gray-500 focus:outline-none focus:ring" placeholder="Write a message..."/>
-            </div>
-            <div class="flex flex-row">
-              <button type="button" class="p-2 text-gray-400 rounded-full hover:text-gray-600 hover:bg-gray-100 focus:outline-none focus:ring" aria-label="Show emojis">
-                <svg class="fill-current h-6 w-6" viewBox="0 0 16 16">
-                  <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-                  <path d="M4.285 9.567a.5.5 0 0 1 .683.183A3.498 3.498 0 0 0 8 11.5a3.498 3.498 0 0 0 3.032-1.75.5.5 0 1 1 .866.5A4.498 4.498 0 0 1 8 12.5a4.498 4.498 0 0 1-3.898-2.25.5.5 0 0 1 .183-.683zM7 6.5C7 7.328 6.552 8 6 8s-1-.672-1-1.5S5.448 5 6 5s1 .672 1 1.5zm4 0c0 .828-.448 1.5-1 1.5s-1-.672-1-1.5S9.448 5 10 5s1 .672 1 1.5z"/>
-                </svg>
-              </button>
-              <button type="button" class="p-2 ml-2 text-gray-400 rounded-full hover:text-gray-600 hover:bg-gray-100 focus:outline-none focus:ring" aria-label="Record a voice">
-                <svg class="fill-current h-6 w-6" viewBox="0 0 20 20">
-                  <path d="M10.403,15.231v2.035h2.827c0.223,0,0.403,0.181,0.403,0.404c0,0.223-0.181,0.403-0.403,0.403H6.77c-0.223,0-0.404-0.181-0.404-0.403c0-0.224,0.181-0.404,0.404-0.404h2.826v-2.035C6.89,15.024,4.751,12.758,4.751,10c0-0.223,0.181-0.403,0.404-0.403S5.559,9.777,5.559,10c0,2.449,1.992,4.441,4.441,4.441c2.449,0,4.441-1.992,4.441-4.441c0-0.223,0.182-0.403,0.404-0.403s0.403,0.18,0.403,0.403C15.248,12.758,13.108,15.024,10.403,15.231 M13.026,4.953V10c0,1.669-1.357,3.027-3.027,3.027S6.972,11.669,6.972,10V4.953c0-1.669,1.358-3.028,3.028-3.028S13.026,3.284,13.026,4.953M12.221,4.953c0-1.225-0.996-2.22-2.221-2.22s-2.221,0.995-2.221,2.22V10c0,1.225,0.996,2.22,2.221,2.22s2.221-0.995,2.221-2.22V4.953z"></path>
-                </svg>
-              </button>
-            </div>
+        
+       
+          
+        {currentChat? <CurrentChat  chat={currentChat} currentUserId={user._id} setSendMessage={setSendMessage}  recieveMessage={recieveMessage}/>:
+     <>
+         <div class="flex flex-row items-center justify-between px-3 py-2 bg-gray-50 bg-opacity-40 border-b-2 border-gray-100">
+         <div class="">
+           <h2 class="font-medium p-2">Start!</h2>
+         
+         </div>
+         </div>
+        <div class="flex-auto flex flex-col justify-between overflow-y-auto messagelist">
+        <div class="flex flex-col h-96">
+           <div class="flex flex-row p-2 w-11/12">
+                
+           <div class="w-1/12 py-2 flex">
+             {/* <img src="https://www.statnews.com/wp-content/uploads/2018/01/AdobeStock_107381486-645x645.jpeg" class="h-12 w-12 rounded-full self-end" alt=""/> */}
+           </div>
+           <div class="w-11/12 p-2">
+             <div class="bg-gray-50 p-3 rounded-xl mb-2 relative">
+               {/* <h2 class="text-sm font-semibold mb-2">sharon</h2> */}
+               <p class="text-sm"> Tap on a Chat to start a conversation . . . </p>
+               <span class="text-xs text-gray-500 absolute right-2 bottom-2"></span>
+             </div>
+             </div>
+         </div>
+           </div>
+         </div>
+         <div class="flex flex-row justify-between items-center p-3">
+            
+     
+          <div class="flex-1 px-3">
+          
+            <input className='w-full border-2 border-gray-100 rounded-full px-4 py-1 outline-none text-gray-500 focus:outline-none focus:ring' readOnly type="text" />
           </div>
+          
+          <div class="flex flex-row">
+       
+            
+            <button  disabled type="button" class="p-2 ml-2 text-gray-400 rounded-full hover:text-gray-600 hover:bg-gray-100 focus:outline-none focus:ring" aria-label="Record a voice">
+             
+              <IoIosSend className='w-8 h-8 fill-slate-500'/>
+            </button>
+          </div>
+        </div>
+         </>
+         }
+          {/* <!-- Input for writing a messages --> */}
+          
         </div>
         {/* <!-- Right section --> */}
         {/* <div class="hidden w-2/6 xl:block bg-white rounded-r-md p-5 overflow-y-auto">

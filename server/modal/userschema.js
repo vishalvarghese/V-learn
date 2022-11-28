@@ -8,6 +8,13 @@ var userschema =mongoose.Schema({
  connections:String,
  phonenumber:Number,
  password:String,
+ connection_Request:{
+    type:Array,
+    default:[]
+},
+connections:{
+    type:Array,default:[]
+},
  status:{type:String,default:"Active"},
 
 });

@@ -1,5 +1,5 @@
 var express = require('express');
-const { postSignup, login, addpost, getpost, newComment, getComment, likePost, visituser, getUserData } = require('../controller/usercontroller/usercontoller');
+const { postSignup, login, addpost, getpost, newComment, getComment, likePost, visituser, getUserData, connectionhelper } = require('../controller/usercontroller/usercontoller');
 var router = express.Router();
 var multer =require('multer');
 const { allusers } = require('../controller/admincontroller/admincontroller');
@@ -41,7 +41,7 @@ router.get('/feedpost',getpost)
 
 router.put('/post/like/:id',likePost)
 
-router.get('/connections',allusers)
+router.get('/connections',connectionhelper)
 router.get('/othersprofile/:id',visituser)
 router.get('/userData/:id',getUserData)
 module.exports = router;

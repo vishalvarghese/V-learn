@@ -146,4 +146,14 @@ const getComment=async(req,res)=>{
        console.log(error); 
     }
    }
-module.exports={getUserData,postSignup,login,addpost,getpost,newComment,getComment,likePost,visituser}
+
+   const connectionhelper=async(req,res)=>{
+    try{
+        const data = await User.find();
+        // console.log(data);
+        res.json(data)
+    }catch(error){
+        console.log(error.messsage);
+    }
+   }
+module.exports={getUserData,postSignup,login,addpost,getpost,newComment,getComment,likePost,visituser,connectionhelper}
