@@ -13,12 +13,18 @@ import { useEffect } from 'react'
 import axios from 'axios'
 import { useNavigate,Link } from 'react-router-dom'
 function Connections() {
+
   const navigate =useNavigate()
-  const[userList,setUserList]=useState([])
+ 
+  const PF = process.env.REACT_APP_PUBLIC_FOLDER
+  const user = useSelector((state) => state.user)
+  const[suggestionList,setSuggestionList]=useState([])
+  const[connectedList,setConnectedList]=useState([])
   useEffect(()=>{
-    axios.get('http://localhost:5000/connections').then((response)=>{
-      console.log(response.data);
-      setUserList(response.data)
+    axios.get('http://localhost:5000/connections/'+user._id).then((response)=>{
+      console.log(response.data.connectedList.connections,"jjjjjjjjjjjjjjjjjjj");
+      setSuggestionList(response.data.data)
+      setConnectedList(response.data.connectedList.connections)
     }).catch((err)=>{
       console.log(err);
     })
@@ -26,8 +32,7 @@ function Connections() {
   
   const [profiledrop,setprofiledrop]=useState(false)
   // const [showOwnCourse, setShowOwnCourse] = useState(false);
-  const PF = process.env.REACT_APP_PUBLIC_FOLDER
-  const user = useSelector((state) => state.user)
+
   
   const gotoprofile=(id)=>{
     axios.get('http://localhost:5000/othersprofile/'+id).then((res)=>{
@@ -36,11 +41,40 @@ function Connections() {
  })
   }
 
-  // Axios.post('http://localhost:5000/unblockuser/'+id)
-  // .then((res)=>{
-  //     setchange(!change)
-  //   navigate("/adminuserlist")
-  // })
+
+  const [showModal,setShowModal]=useState(false);
+  const [modalData,setModalData]=useState({
+    connectUserId:'',  
+  })
+
+  const modalshow=(id)=>{
+    // e.preventDefault()
+    setModalData({
+      connectUserId:id
+    })
+    setShowModal(true)
+  }
+
+  const sendRequest=()=>{
+  // console.log(modalData,'send requesst scucesssssssssssss');
+  axios.post(`http://localhost:5000/sendRequest/${user._id}/${modalData.connectUserId}`).then((res)=>{
+    console.log(res.data);
+  })
+
+  }
+
+  const startChat=(recieverId)=>{
+    const data={
+      senderId:user._id,
+      receiverId:recieverId
+    }
+  axios.post('http://localhost:5000/chat',data).then((res)=>{
+    console.log(res.data);
+    navigate('/chatbox')
+  })
+
+  }
+  
 
   return (
     <div>
@@ -247,15 +281,27 @@ function Connections() {
 
 {/* Connection cards start */}
 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-4 w-full">
+{ 
+ connectedList.map((obj,index)=>{
+  return(  <div class="flex justify-between relative p-4 w-full bg-white rounded-lg overflow-hidden shadow hover:shadow-md">
+	<img class="w-12 h-12 rounded-full bg-gray-100" src={profilepic} alt="" />
+	<div class="ml-3">
+	  <p class="font-medium text-gray-800 text-center">{obj.name}</p>
+	 
+	</div>
+    <button onClick={()=>{startChat(obj._id)}} className='rounded-2xl bg-blue-500 p-1'><p class="text-white text-sm  text-center">Message</p></button>
+  </div>
+)
 
-  <div class="flex justify-between relative p-4 w-full bg-white rounded-lg overflow-hidden shadow hover:shadow-md">
+ })}
+  {/* <div class="flex justify-between relative p-4 w-full bg-white rounded-lg overflow-hidden shadow hover:shadow-md">
 	<img class="w-12 h-12 rounded-full bg-gray-100" src={profilepic} alt="" />
 	<div class="ml-3">
 	  <p class="font-medium text-gray-800 text-center">John varghesee doe</p>
 	 
 	</div>
     <button className='rounded-2xl bg-blue-500 p-1'><p class="text-white text-sm  text-center">Message</p></button>
-  </div>
+  </div> */}
 
   
 </div>
@@ -265,18 +311,18 @@ function Connections() {
 <p className='mt-10'>People You may know?</p>
 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-4 w-full">
 { 
- userList.map((obj,index)=>{
+ suggestionList.map((obj,index)=>{
   return(  
   <div class="flex justify-between relative p-4 w-full bg-white rounded-lg overflow-hidden shadow hover:shadow-md">
 	<img class="w-12 h-12 rounded-full bg-gray-100" src={PF+obj.profilePicture} alt="" />
 	<Link key={index} to={'/otherprofile'} state={{otheruser:obj}}><div class="cursor-pointer ml-3">
 	  <p class="font-medium text-gray-800 text-center">{obj.name}</p>
 	</div></Link>
-    <button className='rounded-2xl bg-blue-500 p-2'><p class="text-white text-sm  text-center">Connect</p></button>
+    <button onClick={(e)=>{modalshow(obj._id)}} className='rounded-2xl bg-blue-500 p-2'><p class="text-white text-sm  text-center">Connect</p></button>
   </div>
   )
   })
-}
+}c
   
 </div>
 {/* suggestions ends */}
@@ -293,6 +339,48 @@ function Connections() {
       {/* <Footer /> */}
     </>
    
+                       {/* modal begins */}
+                       {showModal ? (
+                <>
+                    <div
+                        className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
+                    >
+                        <div className="relative w-auto my-6 mx-auto max-w-3xl">
+                            {/*content*/}
+                            <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
+                                {/*header*/}
+                                <div className="flex items-start justify-between p-5 border-b border-solid border-slate-200 rounded-t">
+                                {/* <h3 className="text-3xl font-semibold">{modalData.name}</h3> */}
+                                <h3 className="text-3xl font-semibold">Connection Request</h3>
+                                    <button
+                                        className="p-1 ml-auto bg-transparent border-0 text-black float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
+                                        onClick={() => setShowModal(false)}
+                                    >
+                                        <span className="bg-transparent text-black h-6 w-6 text-2xl block outline-none focus:outline-none">
+                                            ×
+                                        </span>
+                                    </button>
+                                </div>
+                                {/*body*/}
+                                <div className="relative p-6 flex-auto">
+
+                                  <p>Are you sure that you want to send connection request?</p>
+                                  <div className='flex justify-center'> 
+                                    <button onClick={()=>{sendRequest();setShowModal(false)}} className='m-2 py-1 px-3 rounded-xl bg-green-300'>Yes</button>
+                                    <button onClick={()=>{setShowModal(false)}} className='m-2 py-1 px-3 rounded-xl bg-red-300'>No</button>
+                                  </div>
+                                   
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
+                </>
+            ) : null}
+{/* modal ends */}
+
+
     </div>
   )
 }

@@ -1,5 +1,5 @@
 var express = require('express');
-const { postSignup, login, addpost, getpost, newComment, getComment, likePost, visituser, getUserData, connectionhelper } = require('../controller/usercontroller/usercontoller');
+const { postSignup, login, addpost, getpost, newComment, getComment, likePost, visituser, getUserData, connectionhelper, sendRequest, connectionRequestList, acceptConnection } = require('../controller/usercontroller/usercontoller');
 var router = express.Router();
 var multer =require('multer');
 const { allusers } = require('../controller/admincontroller/admincontroller');
@@ -41,7 +41,11 @@ router.get('/feedpost',getpost)
 
 router.put('/post/like/:id',likePost)
 
-router.get('/connections',connectionhelper)
+router.get('/connections/:id',connectionhelper)
 router.get('/othersprofile/:id',visituser)
 router.get('/userData/:id',getUserData)
+router.post('/sendRequest/:senderId/:recieverId',sendRequest)
+
+router.get('/connectionRequestList/:id',connectionRequestList)
+router.post('/acceptConnection/:accepterId/:senderId',acceptConnection)
 module.exports = router;

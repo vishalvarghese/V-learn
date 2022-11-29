@@ -4,7 +4,7 @@ const defaultUser = JSON.parse(localStorage.getItem('user'))
 
 
 if(defaultUser){
-    var { _id,name, email, profilePicture,status,coverPicture,connections} = defaultUser
+    var { _id,name, email, profilePicture,status,coverPicture,connections,connection_Request} = defaultUser
 }else{
 
 }
@@ -20,6 +20,7 @@ const userSlice = createSlice({
         profilePicture,
         coverPicture,
         connections,
+        connection_Request,
         
     },
     reducers:{
@@ -31,6 +32,7 @@ const userSlice = createSlice({
             state.coverPicture = action.payload.coverPicture
             state.connections = action.payload.connections
             state.status = action.payload.status
+            state.connection_Request = action.payload.connection_Request
         }, 
         logout:(state) => {state ={} }
     },

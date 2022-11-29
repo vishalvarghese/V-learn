@@ -149,11 +149,93 @@ const getComment=async(req,res)=>{
 
    const connectionhelper=async(req,res)=>{
     try{
-        const data = await User.find();
+        const currentUserId=req.params.id //userId
+     const connectedList= await User.findById(req.params.id).populate("connections")
+     console.log(connectedList);
+    
+     const suggestionList=""
+        const data = await User.find({_id:{$nin:[currentUserId]}});
+    
         // console.log(data);
-        res.json(data)
+
+        res.json({data,connectedList})
     }catch(error){
         console.log(error.messsage);
     }
    }
-module.exports={getUserData,postSignup,login,addpost,getpost,newComment,getComment,likePost,visituser,connectionhelper}
+
+   const sendRequest= async (req,res)=>{
+    try{ const sender=req.params.senderId;
+    const reciever=req.params.recieverId;
+     console.log('send request recieved from :',req.params.senderId,'reciever',req.params.recieverId);
+    await User.updateOne({_id:reciever}, { $addToSet: { connection_Request: sender } } );
+        
+        }catch(error)
+        {
+            console.log(err);
+        }
+    }
+
+    const connectionRequestList= async(req,res)=>{
+        try{
+            const user= await User.findById(req.params.id)
+            // console.log(user);
+           if(user){
+           const requestList =await Promise.all(user?.connection_Request?.map((id)=>{
+            return User.findOne({_id:id},{name:1,profilePicture:1})
+           }))
+        //    console.log(requestList,"hjhdjjjjjjjjj");
+        res.status(200).json(requestList)
+           }
+           else{
+            console.log('no user');
+            res.status(402).json('please try again')
+           } 
+      
+        }catch(error)
+        {
+            console.log(error)
+            res.status(500).json(error)
+        }
+    }
+
+    const acceptConnection= (req,res)=>{
+        try{
+         console.log(req.params.senderId,"accepted your request",req.params.accepterId);
+        
+         User.updateOne({_id:req.params.accepterId}, 
+            {$addToSet: { connections: req.params.senderId}}, function (err, docs) {
+            if (err){
+                console.log(err)
+            }
+            else{
+                console.log("Updated Docs : ", docs);
+            }
+        });
+
+        User.updateOne({_id:req.params.senderId}, 
+            {$addToSet: { connections:req.params.accepterId }}, function (err, docs) {
+            if (err){
+                console.log(err)
+            }
+            else{
+                console.log("Updated Docs : ", docs);
+            }
+        });
+
+        User.updateOne({_id:req.params.accepterId}, 
+            {$pull: { connection_Request:req.params.senderId }}, function (err, docs) {
+            if (err){
+                console.log(err)
+            }
+            else{
+                console.log("Updated Docs : ", docs);
+            }
+        });
+        res.status(200).json('success')
+        }catch(error){
+            console.log(error);
+        }
+    }
+
+module.exports={acceptConnection,connectionRequestList,sendRequest,getUserData,postSignup,login,addpost,getpost,newComment,getComment,likePost,visituser,connectionhelper}

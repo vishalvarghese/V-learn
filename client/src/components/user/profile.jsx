@@ -243,15 +243,15 @@ function Profile() {
                         </span>
                         <span className="text-sm text-gray-500">Connections</span>
                       </div>
-                      <div onClick={(e)=>{setShowGallery(true);setShowRequest(!showRequest)}} className="cursor-pointer mr-4 p-3 text-center">
+                      <div onClick={(e)=>{setShowGallery(true);setShowRequest(false)}} className="cursor-pointer mr-4 p-3 text-center">
                         <span className="text-xl font-bold block uppercase tracking-wide text-gray-700">
                           10
                         </span>
                         <span  className="text-sm text-gray-500">Photos</span>
                       </div>
-                      <div onClick={(e)=>{setShowRequest(true);setShowGallery(!showGallery)}} className="cursor-pointer lg:mr-4 p-3 text-center">
+                      <div onClick={(e)=>{setShowRequest(true);setShowGallery(false)}} className="cursor-pointer lg:mr-4 p-3 text-center">
                         <span className="text-xl font-bold block uppercase tracking-wide text-gray-700">
-                          5
+                         {user.connection_Request.length}
                         </span>
                         <span  className=" text-sm text-gray-500">Requests</span>
                       </div>

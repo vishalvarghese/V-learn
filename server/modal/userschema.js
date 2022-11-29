@@ -5,16 +5,17 @@ var userschema =mongoose.Schema({
  email:String,
  profilePicture:{type:String,default:"profilepicdefault.png"},
  coverPicture:String,
- connections:String,
  phonenumber:Number,
  password:String,
  connection_Request:{
     type:Array,
     default:[]
 },
-connections:{
-    type:Array,default:[]
-},
+connections:[{
+    type:mongoose.Schema.Types.ObjectId,
+    require:true,
+    ref:"user"
+}],
  status:{type:String,default:"Active"},
 
 });
