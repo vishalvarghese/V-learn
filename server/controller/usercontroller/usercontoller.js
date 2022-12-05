@@ -1,10 +1,13 @@
 const app = require("../../app");
 const User=require("../../modal/userschema")
+const course=require("../../modal/courses")
 const bcrypt =require('bcrypt')
 const jwt = require("jsonwebtoken")
-const Post=require("../../modal/postschema")
+const post=require("../../modal/postschema")
 const CommentSchema=require('../../modal/commentschema');
 const CommentModel = require("../../modal/commentschema");
+const courses = require("../../modal/courses");
+
 const postSignup = async (req, res) => {
     try {
         // console.log({ ...req.body });
@@ -61,7 +64,7 @@ const login = async (req, res) => {
 
 const addpost= async(req,res)=>{
     // console.log(req.body);
-    const newPost=new Post(req.body)
+    const newPost=new post(req.body)
     try {
       const savedPost=await newPost.save()
     //   await Users.updateOne({$push:{posts:savedPost._id}})
@@ -73,7 +76,7 @@ const addpost= async(req,res)=>{
 }
 const getpost=async(req,res)=>{
    try{
-    const allpost=await Post.find().populate('userId').sort({_id:-1});
+    const allpost=await post.find().populate('userId').sort({_id:-1});
     // console.log(allpost);   
     res.json(allpost)
    }catch(error)
@@ -94,10 +97,10 @@ const newComment=async(req,res)=>{
     
 }
 const getComment=async(req,res)=>{
-    console.log(req.params.id);
+    // console.log(req.params.id);
     try{
      const allComment=await CommentModel.find({ postId: req.params.id}).populate('userId').sort({_id:1});
-      console.log(allComment);   
+    //   console.log(allComment);   
      res.json(allComment)
     }catch(error)
     {
@@ -106,11 +109,11 @@ const getComment=async(req,res)=>{
  }
  
  const likePost=async(req,res)=>{
-    console.log(req.body.userId);
-    console.log(req.params.id);
+    // console.log(req.body.userId);
+    // console.log(req.params.id);
     try{
         console.log('like');
-        const post=await Post.findById(req.params.id)
+        const post=await post.findById(req.params.id)
         console.log(post);
         if(!post.likes.includes(req.body.userId)){
             await post.updateOne({$push:{likes:req.body.userId}})
@@ -149,16 +152,17 @@ const getComment=async(req,res)=>{
 
    const connectionhelper=async(req,res)=>{
     try{
-        const currentUserId=req.params.id //userId
-     const connectedList= await User.findById(req.params.id).populate("connections")
-     console.log(connectedList);
+       const currentUserId=req.params.id //userId
+       
+       const connectedList= await User.findById(req.params.id).populate("connections")
+      
+       const connect=connectedList.connections
     
-     const suggestionList=""
-        const data = await User.find({_id:{$nin:[currentUserId]}});
+       const suggestionList = await User.find({$and:[{_id:{$nin:[...connect]}},{_id:{$nin:[currentUserId]}}]});
     
-        // console.log(data);
+      
 
-        res.json({data,connectedList})
+        res.json({suggestionList,connectedList})
     }catch(error){
         console.log(error.messsage);
     }
@@ -237,5 +241,49 @@ const getComment=async(req,res)=>{
             console.log(error);
         }
     }
+     
+    const createCourse=async(req,res)=>{
+      try{
+    
+    //  console.log(req.body);
+     const courseDetail=await new course(req.body)
+     await courseDetail.save()
+     res.status(200).json({newCourse:courseDetail})
+    //   const data="success"  
+    //   res.json(data)
+    }catch(error){
+        console.log(error);
+    }
 
-module.exports={acceptConnection,connectionRequestList,sendRequest,getUserData,postSignup,login,addpost,getpost,newComment,getComment,likePost,visituser,connectionhelper}
+    }
+
+    const getcourses=async(req,res)=>{
+        try{
+            const courseList=await course.find()
+            // console.log(courseList);
+            res.json(courseList)
+            } catch(error){
+               console.log(error); 
+            }
+    }
+
+    const getChapter=async(req,res)=>{
+        try{
+            console.log(req.params.id);
+            const chapterList=await post.find({courseId:req.params.id})
+            console.log(chapterList);
+            res.json(chapterList)
+            } catch(error){
+               console.log(error); 
+            }
+    }
+
+    const userDetail=async(req,res)=>{
+        try{
+       const data= await User.findById(req.params.id)
+       res.json(data)
+        }catch(error){
+               console.log(error);
+        }
+    }
+module.exports={userDetail,getChapter,getcourses,createCourse,acceptConnection,connectionRequestList,sendRequest,getUserData,postSignup,login,addpost,getpost,newComment,getComment,likePost,visituser,connectionhelper}

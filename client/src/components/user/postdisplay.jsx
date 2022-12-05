@@ -53,7 +53,7 @@ function Postdisplay({ obj }) {
   useEffect(() => {
     // pass post id
     axios.get('http://localhost:5000/getComment/' + obj._id).then((response) => {
-      console.log(response.data, 'hdelooooooooooo');
+      // console.log(response.data, 'hdelooooooooooo');
       setCommentdata(response.data)
     }).catch((err) => {
       console.log(err);
@@ -61,7 +61,7 @@ function Postdisplay({ obj }) {
   }, [commentDesc])
   return (
     <div>
-      <p class="  text-sm font-normal text-gray-500 mt-7"> <img className='w-10 h-10 rounded-2xl m-2' src={profilepic} alt="" />
+      <p class="  text-sm font-normal text-gray-500 mt-7"> <img className='w-10 h-10 rounded-2xl m-2' src={PF+obj.userId.profilePicture} alt="" />
         {obj.userId.name}</p>
       <p class=" text-sm font-normal text-gray-500 mb-3">{format(obj.createdAt)}</p>
 
@@ -70,9 +70,9 @@ function Postdisplay({ obj }) {
       </p>
 
       {/* video */}
-      {obj.video && <video className='w-full h-96' controls src={PF + obj.video} type="video/mp4"></video>}
+      {obj.video && <video className='w-full h-96' controls src={obj.video} type="video/mp4"></video>}
       {/* image */}
-      {obj.img && <img className='.max-w-full .h-auto' src={PF + obj.img} alt="" />}
+      {obj.img && <img className='.max-w-full .h-auto' src={obj.img} alt="" />}
       {/* youtubelink */}
       <div>
         {/* <iframe className='w-full h-96' src="https://www.youtube.com/embed/JKEJizRiBgQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe> */}
@@ -104,7 +104,7 @@ function Postdisplay({ obj }) {
                 <div className="bg-slate-50 flex gap-3 my-2 items-center">
                   <div>
                     {/* <img className="w-8 rounded-full" src={PF+obj.userId.profilePicture} alt="profile" /> */}
-                    <img className="w-8 rounded-full" src={profilepic} alt="profile" />
+                    <img className="w-8 rounded-full" src={PF+obj.userId.profilePicture} alt="profile" />
                   </div>
                   <div>
                     <div>

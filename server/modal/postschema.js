@@ -19,7 +19,13 @@ const postSchema=new mongoose.Schema({
     likes:{
         type:Array,
         default:[]
-    }
+    },
+    courseName:{
+        type:String
+    },
+    courseId:{
+      type:String
+    },
     },{
         timestamps:true 
     })

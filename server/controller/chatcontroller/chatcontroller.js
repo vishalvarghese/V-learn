@@ -18,16 +18,7 @@ const createChat =async(req,res)=>{
        const result =await newChat.save()
        res.status(200).json(result)
        }
-    
-       //    if(!ChatModel.members.includes(req.body.senderId,req.body.receiverId))
-// {
-//        const result =await newChat.save()
-//        res.status(200).json(result)
-// }
-// else{
-//      console.log("ssssssssjjjjjjjjjjjjjjjjjjjj")
-//     res.json({success:true})
-// }
+  
       } catch(error){
     res.status(500).json(error)
    }
