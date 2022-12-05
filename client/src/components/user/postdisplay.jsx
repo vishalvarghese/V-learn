@@ -61,7 +61,7 @@ function Postdisplay({ obj }) {
   }, [commentDesc])
   return (
     <div>
-      <p class="  text-sm font-normal text-gray-500 mt-7"> <img className='w-10 h-10 rounded-2xl m-2' src={PF+obj.userId.profilePicture} alt="" />
+      <p class="  text-sm font-normal text-gray-500 mt-7"> <img className='w-10 h-10 rounded-2xl m-2' src={obj.userId.profilePicture} alt="" />
         {obj.userId.name}</p>
       <p class=" text-sm font-normal text-gray-500 mb-3">{format(obj.createdAt)}</p>
 
@@ -104,7 +104,7 @@ function Postdisplay({ obj }) {
                 <div className="bg-slate-50 flex gap-3 my-2 items-center">
                   <div>
                     {/* <img className="w-8 rounded-full" src={PF+obj.userId.profilePicture} alt="profile" /> */}
-                    <img className="w-8 rounded-full" src={PF+obj.userId.profilePicture} alt="profile" />
+                    <img className="w-8 rounded-full" src={obj.userId.profilePicture} alt="profile" />
                   </div>
                   <div>
                     <div>

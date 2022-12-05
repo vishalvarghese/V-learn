@@ -6,8 +6,9 @@ import connectionimg from '../../asset/connection.png'
 import profilepic from '../../asset/profilepic.jpg'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from "react-router-dom";
-import Swal from 'sweetalert2'
-
+import Swal from 'sweetalert2';
+import courseIcon from '../../asset/courseIcon.png'
+import axios from 'axios'
 function Header() {
     const navigate = useNavigate()
     const [profiledrop,setprofiledrop]=useState(false)
@@ -15,7 +16,11 @@ function Header() {
     const PF = process.env.REACT_APP_PUBLIC_FOLDER
     const dispatch = useDispatch();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-
+    const [showModal,setShowModal]=useState(false);
+    // const [updateProfilePic,setUpdateProfilePic]=useState('')
+    const [imageFile, setImageFile] = useState('')
+    const [desc, setDesc] = useState('')
+    const [designation,setDesignation]=useState('')
     const logout = (e) => {
         e.preventDefault()
         Swal.fire({
@@ -48,6 +53,45 @@ function Header() {
     
     
       };
+
+      const submitHandler=async(e)=>{
+      //  e.PreventDefault()
+       console.log("form submitted");
+      try{ 
+
+     const updateData={
+      designation:designation,
+      desc:desc,
+      userId:user._id
+       }
+
+       if (imageFile) {
+        const data = new FormData();
+        const fileName = imageFile.name
+        data.append("file", imageFile)
+        data.append("name", fileName)
+        // courseDetails.img = fileName
+        try {
+          await axios.post('http://localhost:5000/post/upload', data).then((response)=>{
+            // console.log(response,'qqqqqqqqqqqqqqq');
+            updateData.img='https://drive.google.com/uc?export=view&id='+response.data})
+  
+        } catch (error) {
+          console.log(error);
+        }
+      }
+      axios.post("http://localhost:5000/updateProfile",updateData).then(
+        (res)=>{
+          console.log(res)
+          window.location.reload()
+        }
+      )
+
+      }catch(error){
+        console.log(error)
+      }
+      }
+
   return (
     
     <div className='flex justify-between'>
@@ -98,6 +142,20 @@ function Header() {
 
           <li>
             <a
+              href="/connections"
+              aria-label="Our product"
+              title="Our product"
+              class="font-medium tracking-wide text-blue-900 transition-colors duration-200 hover:text-teal-accent-400"
+            >
+              <div className='flex flex-col text-xs justify-center'>
+                <div className='flex justify-center'><img className='w-10 h-10' src={courseIcon} alt="" /></div>
+                <div><p className=''> COURSES</p></div>
+              </div>
+            </a>
+          </li>
+
+          <li>
+            <a
               href="/chatbox"
               aria-label="About us"
               title="About us"
@@ -132,7 +190,7 @@ function Header() {
 
             {profiledrop && <div class="absolute right-0 z-20 w-56 py-2 mt-2 overflow-hidden bg-white rounded-md shadow-xl dark:bg-gray-800">
               <a href="/profile" class="flex items-center p-3 -mt-2 text-sm text-gray-600 transition-colors duration-200 transform dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-white">
-                <img class="flex-shrink-0 object-cover mx-1 rounded-full w-9 h-9" src={PF + user.profilePicture} alt="jane avatar" />
+                <img class="flex-shrink-0 object-cover mx-1 rounded-full w-9 h-9" src={user.profilePicture} alt="jane avatar" />
                 <div class="mx-1">
                   <h1 class="text-sm font-semibold text-gray-700 dark:text-gray-200">{user.name}</h1>
                   <p class="text-sm text-gray-500 dark:text-gray-400">{user.email}</p>
@@ -145,8 +203,8 @@ function Header() {
                 view profile
               </a>
 
-              <a href="#" class="block px-4 py-3 text-sm text-gray-600 capitalize transition-colors duration-200 transform dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-white">
-                Settings
+              <a onClick={(e)=>{setShowModal(e)}} href="#" class="block px-4 py-3 text-sm text-gray-600 capitalize transition-colors duration-200 transform dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-white">
+                update profile
               </a>
 
               {/* <a href="#" class="block px-4 py-3 text-sm text-gray-600 capitalize transition-colors duration-200 transform dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-white">
@@ -300,7 +358,64 @@ function Header() {
     </div>
 
 
+    {showModal ? (
+                <>
+                    <div
+                        className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
+                    >
+                        <div className="relative w-auto my-6 mx-auto max-w-3xl">
+                            {/*content*/}
+                            <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
+                                {/*header*/}
+                                <div className="flex items-start justify-between p-5 border-b border-solid border-slate-200 rounded-t">
+                                {/* <h3 className="text-3xl font-semibold">{modalData.name}</h3> */}
+                                <h3 className="text-3xl font-semibold">Update profile details </h3>
+                                    <button
+                                        className="p-1 ml-auto bg-transparent border-0 text-black float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
+                                        onClick={() => setShowModal(false)}
+                                    >
+                                        <span className="bg-transparent text-black h-6 w-6 text-2xl block outline-none focus:outline-none">
+                                            ×
+                                        </span>
+                                    </button>
+                                </div>
+                                {/*body*/}
+                                <div className="relative p-6 flex-auto">
+                                <div class="">
+  <div class="mx-auto max-w-screen-sm px-4">
+    {/* <p class="mt-6 text-xl font-bold sm:mb-6 sm:text-3xl">Write your comment</p> */}
+    <form onSubmit={(e)=>{submitHandler(e);setShowModal(false)}} action="">
+    <div class="-ml-20 flex p-4 text-left text-gray-700">
+      <img class="mr-5 h-12 w-12 rounded-full" src="https://ui-avatars.com/api/?name=John+Doe" alt="" />
+      <div class="w-full space-y-3 text-gray-700">
+       
+       <label htmlFor="imageFile">Upload New Profile Picture</label>
+          <input onChange={(e) => { setImageFile(e.target.files[0]) }} name='imageFile' type="file" placeholder="name" class="h-12 w-full max-w-full rounded-md  bg-white px-5 text-sm outline-none" />
+        
+        <div class="">
+          <input onChange={(e) => { setDesignation(e.target.value) }} type="text" placeholder="Profession/Desigination" class="h-12 w-full max-w-full rounded-md border bg-white px-5 text-sm outline-none focus:ring" />
+        </div>
+       
+        <div class="">
+          <textarea onChange={(e) => { setDesc(e.target.value) }} name="comment" id="" placeholder="Write About your self" cols="30" rows="6" class="h-40 w-full min-w-full max-w-full overflow-auto whitespace-pre-wrap rounded-md border bg-white p-5 text-sm font-normal normal-case text-gray-600 opacity-100 outline-none focus:text-gray-600 focus:opacity-100 focus:ring"></textarea>
+        </div>
+        <div class="float-right">
+          <button  type="submit"  class="relative inline-flex h-10 w-auto max-w-full cursor-pointer items-center justify-center overflow-hidden whitespace-pre rounded-md bg-blue-700 px-4 text-center text-sm font-medium normal-case text-white opacity-100 outline-none focus:ring" />
+        </div>
+      </div>
+    </div>
+    </form>
+  </div>
+</div>
+{/* body */}
+                                </div>
 
+                            </div>
+                        </div>
+                    </div>
+                    <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
+                </>
+            ) : null}
   </div>
   )
 }

@@ -4,7 +4,7 @@ var GoogleDriveStorage = require('multer-google-drive')
 // const fs=require('fs')
 
 var express = require('express');
-const { postSignup, login, addpost, getpost, newComment, getComment, likePost, visituser, getUserData, connectionhelper, sendRequest, connectionRequestList, acceptConnection, createCourse, getcourses, getChapter, userDetail } = require('../controller/usercontroller/usercontoller');
+const { postSignup, login, addpost, getpost, newComment, getComment, likePost, visituser, getUserData, connectionhelper, sendRequest, connectionRequestList, acceptConnection, createCourse, getcourses, getChapter, userDetail, updateProfile } = require('../controller/usercontroller/usercontoller');
 var router = express.Router();
 var multer = require('multer');
 const { allusers } = require('../controller/admincontroller/admincontroller');
@@ -135,4 +135,6 @@ router.get('/getcourses', getcourses)
 router.get('/getChapters/:id', getChapter)
 
 router.get('/userDetail/:id', userDetail)
+
+router.post('/updateProfile',updateProfile)
 module.exports = router;
