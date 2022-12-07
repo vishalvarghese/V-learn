@@ -25,7 +25,7 @@ function Adminsignup() {
         console.log(response.data.admindata);
         alert("login sucessful")
         localStorage.setItem("admintoken",response.data.admindata)
-      navigate("/admindashboard")
+      navigate("/adminuserlist")
       }
     }) 
     .catch((error)=>{

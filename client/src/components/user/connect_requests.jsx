@@ -38,7 +38,7 @@ function Connect_requests() {
 							<h2 className='space-y-2 text-center text-3xl font-bold'>No new Connection Requests</h2>}
 						{/* <p className="font-serif text-sm dark:text-gray-400">Qualisque erroribus usu at, duo te agam soluta mucius.</p> */}
 					</div>
-					<div className="grid grid-cols-1 gap-x-4 gap-y-8 md:grid-cols-2 lg:grid-cols-4">
+					<div className="grid grid-cols-1 gap-x-8 gap-y-8 md:grid-cols-2 lg:grid-cols-3">
 
 
 						{
@@ -46,7 +46,7 @@ function Connect_requests() {
 								return (
 									<article className="flex flex-col dark:bg-gray-900">
 										<a rel="noopener noreferrer" href="#" aria-label="Te nulla oportere reprimique his dolorum">
-											<img alt="" className="object-cover w-full h-52 dark:bg-gray-500" src={PF + obj.profilePicture} />
+											<img alt="" className="object-cover w-full h-52 dark:bg-gray-500" src={obj.profilePicture} />
 										</a>
 										<div className="flex flex-col flex-1 p-6">
 											<a rel="noopener noreferrer" href="#" aria-label="Te nulla oportere reprimique his dolorum"></a>

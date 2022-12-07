@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux'
 import axios from 'axios'
 import Header from './hearder'
 function Course_view() {
+  
   const PF = process.env.REACT_APP_PUBLIC_FOLDER
   const courseInfo=useLocation().state.CourseViewDetail
   const user = useSelector((state) => state.user)
@@ -16,7 +17,7 @@ function Course_view() {
   const [chapters,setChapters]=useState([])
 
   const [playVideo,setPlayVideo]=useState('')
-
+  const [addOption,setAddOption]=useState(false)
   const modalshow=(e)=>{
     e.preventDefault()
     setShowModal(true)
@@ -69,6 +70,12 @@ function Course_view() {
     axios.get(`http://localhost:5000/getChapters/${courseInfo._id}`).then((response)=>{
       setChapters(response.data) 
        console.log(response.data);
+
+       if(courseInfo.userId==user._id)
+        {
+          setAddOption(true)
+        }
+
    }).catch((err)=>{
      console.log(err);
    })
@@ -184,6 +191,7 @@ function Course_view() {
       </a>
     </article> */}
     
+{addOption&&
     <article class="h-90 w-72 col-span-1 m-auto min-h-full cursor-pointer overflow-hidden rounded-lg pb-2 shadow-lg transition-transform duration-200 hover:translate-y-2">
       <a href="" class="block h-full w-full">
         <img class="h-60 w-full object-cover" alt="featured image" src={add} />
@@ -198,7 +206,7 @@ function Course_view() {
         </div>
       </a>
     </article>
-   
+}  
 
   
   </div>
@@ -244,9 +252,10 @@ function Course_view() {
         
        
         <div class="">
-          <textarea onChange={(e) => {setDesc(e.target.value)  }} name="comment" id="" placeholder="Write description of the course" cols="30" rows="6" class="h-40 w-full min-w-full max-w-full overflow-auto whitespace-pre-wrap rounded-md border bg-white p-5 text-sm font-normal normal-case text-gray-600 opacity-100 outline-none focus:text-gray-600 focus:opacity-100 focus:ring"></textarea>
+          <textarea required onChange={(e) => {setDesc(e.target.value)  }} name="comment" id="" placeholder="Write description of the course" cols="30" rows="6" class="h-40 w-full min-w-full max-w-full overflow-auto whitespace-pre-wrap rounded-md border bg-white p-5 text-sm font-normal normal-case text-gray-600 opacity-100 outline-none focus:text-gray-600 focus:opacity-100 focus:ring"></textarea>
         </div>
-        <input onChange={(e) => { setVideoFile(e.target.files[0]) }} type="file" placeholder="name" class="h-12 w-full max-w-full rounded-md  bg-white px-5 text-sm outline-none" />
+        <label htmlFor="chaptervideo"></label>
+        <input name='chaptervideo' required accept='video/*' onChange={(e) => { setVideoFile(e.target.files[0]) }} type="file" placeholder="name" class="h-12 w-full max-w-full rounded-md  bg-white px-5 text-sm outline-none" />
 
         <div class="float-right">
           <input  type="submit" value="Save" class="relative inline-flex h-10 w-auto max-w-full cursor-pointer items-center justify-center overflow-hidden whitespace-pre rounded-md bg-blue-700 px-4 text-center text-sm font-medium normal-case text-white opacity-100 outline-none focus:ring" />

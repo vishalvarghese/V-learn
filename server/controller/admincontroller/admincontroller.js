@@ -1,6 +1,9 @@
 const app = require("../../app");
 const jwt = require("jsonwebtoken")
-const User=require("../../modal/userschema")
+const User=require("../../modal/userschema");
+const reportModel = require("../../modal/reportSchema");
+const courses = require("../../modal/courses");
+const postschema = require("../../modal/postschema");
 const admin = {
     adminEmail: 'admin@gmail.com',
     adminPassword: 12345678
@@ -75,4 +78,61 @@ const unblockuser = async (req, res) => {
         }).clone()
 }
 
-module.exports={postadminlogin,allusers,blockuser,unblockuser}
+const getReport= async(req,res)=>{
+    try {
+        const allReport = await reportModel.find().populate('userId').populate('postId').sort({ _id: -1 });
+        // console.log(allpost);   
+        res.json(allReport)
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+const adminCourselist= async(req,res)=>{
+    try{
+  const allCourse= await courses.find().populate('userId')
+  res.json(allCourse) 
+    }catch(error){
+        console.log(error);
+    }
+}
+
+ const blockPost= async(req,res)=>{
+    console.log(req.params.id);
+   
+    await postschema.findByIdAndUpdate(req.params.id, { status: 'Blocked' },
+        function (err, docs) {
+            if (err) {
+                console.log(err)
+                return res.json({ msg: "Not updated" })
+            }
+            else {
+                console.log("Updated application status  ");
+                return res.json({ msg: "updated status" })
+            }
+        }).clone()
+ }
+
+ const unblockPost=async(req,res)=>{
+    await postschema.findByIdAndUpdate(req.params.id, { status: 'active' },
+    function (err, docs) {
+        if (err) {
+            console.log(err)
+            return res.json({ msg: "Not updated" })
+        }
+        else {
+            console.log("Updated application status  ");
+            return res.json({ msg: "updated status" })
+        }
+    }).clone()
+ }
+ const adminGetPost = async (req, res) => {
+    try {
+        const allpost = await postschema.find().populate('userId').sort({ _id: -1 });
+        // console.log(allpost);   
+        res.json(allpost)
+    } catch (error) {
+        console.log(error);
+    }
+}
+module.exports={adminGetPost,unblockPost,blockPost,adminCourselist,getReport,postadminlogin,allusers,blockuser,unblockuser}

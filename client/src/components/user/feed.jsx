@@ -279,7 +279,7 @@ function Feed() {
                                       <label for="fileInput1">
                                         <img className='w-10 h-10' id="icon" src={picimg} />
                                       </label>
-                                      <input hidden id="fileInput1" name='imageFile' type="file" onChange={(e) => { setImageFile(e.target.files[0]); setPerviewImage(e.target.files[0]); }}></input>
+                                      <input hidden id="fileInput1" name='imageFile' type="file" accept="image/*" onChange={(e) => { setImageFile(e.target.files[0]); setPerviewImage(e.target.files[0]); }}></input>
                                       {/* <img id="uploadPreview" style="width: 100px; height: 100px;" /> */}
 
                                     </span>
@@ -287,7 +287,7 @@ function Feed() {
                                       <label for="fileInput2">
                                         <img className='w-10 h-10' id="icon" src={videoimg} />
                                       </label>
-                                      <input hidden id="fileInput2" name='videoFile' type="file" onChange={(e) => { setVideoFile(e.target.files[0]); setPreviewVideo(e.target.files[0]); }}></input>
+                                      <input accept='video/*' hidden id="fileInput2" name='videoFile' type="file" onChange={(e) => { setVideoFile(e.target.files[0]); setPreviewVideo(e.target.files[0]); }}></input>
                                       {/* <img className='w-10 h-10' src={videoimg} alt="" /> */}
                                     </span>
                                   </div>
@@ -315,7 +315,6 @@ function Feed() {
                             post.map((obj) => {
                               return (
                                 <Postdisplay obj={obj} />
-
                               )
                             })}
                         </div>

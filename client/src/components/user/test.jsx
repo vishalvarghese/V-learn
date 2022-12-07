@@ -1,4 +1,4 @@
-import React,{useState} from 'react'
+import React,{useState,useEffect} from 'react'
 // import profilepic from '../../asset/img/team-2-800x800.jpg'
 import profilepic from '../../asset/profilepic.jpg'
 import Owncourse from './owncourse'
@@ -9,6 +9,7 @@ import connectionimg from '../../asset/connection.png'
 import chatimg from '../../asset/chat.png'
 import headerlogo from '../../asset/header logo.png'
 import Header from './hearder'
+import axios from 'axios'
 // import { useSelector } from 'react-redux'
 function OtherProfile() {
   const PF = process.env.REACT_APP_PUBLIC_FOLDER
@@ -17,6 +18,18 @@ function OtherProfile() {
   // const [showOwnCourse, setShowOwnCourse] = useState(false);
   const [profiledrop,setprofiledrop]=useState(false)
 //   const user = useSelector((state) => state.user)
+  const [courses,setCourses]=useState([])
+
+useEffect(()=>{
+  axios.get('http://localhost:5000/getcourses').then((response)=>{
+    setCourses(response.data) 
+    // console.log(response.data);
+ }).catch((err)=>{
+   console.log(err);
+ })
+
+  },[])
+
  
   return (
     <div>
@@ -137,25 +150,44 @@ function OtherProfile() {
                     University of Computer Science
                   </div> */}
   {/* start of course card */}
- 
-  <div>
+ {
+  courses.map((obj)=>{
+    return(
+  
+   <div>
     <div class="bg-gray-100 lg:py-12 lg:flex lg:justify-center">
         <div class="bg-white lg:mx-8 lg:flex lg:max-w-5xl lg:shadow-lg lg:rounded-lg">
-            <div class="lg:w-1/2">
-                <div class="h-64 bg-cover lg:rounded-lg lg:h-full bg- [url (https://images.unsplash.com/photo-1497493292307-31c376b6e479?ixlib=rb-1.2.1&auto=format&fit=crop&w=1351&q=80')]" ></div>
+            <div class="lg:w-1/3 h-full flex justify-center">
+            
+                <img className='.max-w-full .h-auto' src={obj.img} alt="" />
+              
             </div>
-            <div class="py-12 px-6 max-w-xl lg:max-w-5xl lg:w-1/2">
-                <h2 class="text-3xl text-gray-800 font-bold">Build Your New <span class="text-indigo-600">Idea</span></h2>
-                <p class="mt-4 text-gray-600">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quidem modi reprehenderit vitae exercitationem aliquid dolores ullam temporibus enim expedita aperiam mollitia iure consectetur dicta tenetur, porro consequuntur saepe accusantium consequatur.</p>
+            <div class="py-12 px-6 max-w-xl lg:max-w-5xl lg:w-2/3">
+                <h2 class="text-3xl text-gray-800 font-bold">{obj.courseName}</h2>
+                <p class="mt-4 text-gray-600">{obj.desc}</p>
+               <div className='flex justify-center'>
+                <p>Educator:</p>
+                <div>
+                <img className='mx-2 rounded-2xl w-10 h-10' src={obj.creatorPic} alt="" />
+                </div>             
+               <div>
+               <p><span className='text-indigo-600'>
+                {obj.creatorName}</span> </p>
+                </div>
+                </div>
+
                 <div class="mt-8">
-                    <a href="#" class="bg-gray-900 text-gray-100 px-5 py-3 font-semibold rounded">Start Now</a>
+                    <a href="#" class="bg-gray-900 text-gray-100 px-5 py-3 font-semibold rounded">Join Now</a>
                 </div>
             </div>
         </div>
-    </div> 
-</div>
-         
-              {/* End of course card*/}
+      </div> 
+  </div>
+)
+})  
+}
+       
+      {/* End of course card*/}
 
                 </div>
                 <div className=" border-t border-gray-300 text-center">

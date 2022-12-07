@@ -7,6 +7,9 @@ const post = require("../../modal/postschema")
 const CommentSchema = require('../../modal/commentschema');
 const CommentModel = require("../../modal/commentschema");
 const courses = require("../../modal/courses");
+const postschema = require("../../modal/postschema");
+const { findByIdAndDelete } = require("../../modal/userschema");
+const reportModel = require("../../modal/reportSchema");
 
 const postSignup = async (req, res) => {
     try {
@@ -75,7 +78,7 @@ const addpost = async (req, res) => {
 }
 const getpost = async (req, res) => {
     try {
-        const allpost = await post.find().populate('userId').sort({ _id: -1 });
+        const allpost = await post.find({ status:'active'}).populate('userId').sort({ _id: -1 });
         // console.log(allpost);   
         res.json(allpost)
     } catch (error) {
@@ -105,18 +108,17 @@ const getComment = async (req, res) => {
 }
 
 const likePost = async (req, res) => {
-    // console.log(req.body.userId);
-    // console.log(req.params.id);
+    
     try {
         console.log('like');
-        const post = await post.findById(req.params.id)
-        console.log(post);
-        if (!post.likes.includes(req.body.userId)) {
-            await post.updateOne({ $push: { likes: req.body.userId } })
+        const postdata = await postschema.findById(req.params.id)
+        // console.log(post);
+        if (!postdata.likes.includes(req.body.userId)) {
+            await postdata.updateOne({ $push: { likes: req.body.userId } })
             res.json("The post has been liked")
 
         } else {
-            await post.updateOne({ $pull: { likes: req.body.userId } })
+            await postdata.updateOne({ $pull: { likes: req.body.userId } })
             res.json("The post has been unliked")
         }
     } catch (error) {
@@ -201,7 +203,6 @@ const connectionRequestList = async (req, res) => {
 const acceptConnection = (req, res) => {
     try {
         console.log(req.params.senderId, "accepted your request", req.params.accepterId);
-
         User.updateOne({ _id: req.params.accepterId },
             { $addToSet: { connections: req.params.senderId } }, function (err, docs) {
                 if (err) {
@@ -286,47 +287,94 @@ const updateProfile = async (req, res) => {
     try {
         const updateData = req.body
         // console.log(req.body, "upupupuou")
-       if(updateData.desc!=='')
-       {        User.findByIdAndUpdate(updateData.userId, { desc:updateData.desc },
-            function (err, docs) {
-                if (err) {
-                    console.log(err)
-                }
-                else {
-                    console.log("Updated User : ", docs);
-                }
-            });
+        if (updateData.desc !== '') {
+            User.findByIdAndUpdate(updateData.userId, { desc: updateData.desc },
+                function (err, docs) {
+                    if (err) {
+                        console.log(err)
+                    }
+                    else {
+                        console.log("Updated User : ", docs);
+                    }
+                });
         }
 
-        if(updateData.designation!=='')
-        {        User.findByIdAndUpdate(updateData.userId, { designation: updateData.designation },
-             function (err, docs) {
-                 if (err) {
-                     console.log(err)
-                 }
-                 else {
-                     console.log("Updated User : ", docs);
-                 }
-             });
-         }
-          
-         if(updateData.img)
-         {   
-                 User.findByIdAndUpdate(updateData.userId, { profilePicture:updateData.img },
-              function (err, docs) {
-                  if (err) {
-                      console.log(err)
-                  }
-                  else {
-                      console.log("Updated User : ", docs);
-                  }
-              });
-          }
-  
-      
+        if (updateData.designation !== '') {
+            User.findByIdAndUpdate(updateData.userId, { designation: updateData.designation },
+                function (err, docs) {
+                    if (err) {
+                        console.log(err)
+                    }
+                    else {
+                        console.log("Updated User : ", docs);
+                    }
+                });
+        }
+
+        if (updateData.img) {
+            User.findByIdAndUpdate(updateData.userId, { profilePicture: updateData.img },
+                function (err, docs) {
+                    if (err) {
+                        console.log(err)
+                    }
+                    else {
+                        console.log("Updated User : ", docs);
+                    }
+                });
+        }
+
+
         res.json('success')
     } catch (error) {
         console.log(error);
     }
 }
-module.exports = { updateProfile, userDetail, getChapter, getcourses, createCourse, acceptConnection, connectionRequestList, sendRequest, getUserData, postSignup, login, addpost, getpost, newComment, getComment, likePost, visituser, connectionhelper }
+
+const deletePost = async (req, res) => {
+    // console.log(req.params.id)
+    try {
+
+        await postschema.findByIdAndDelete(req.params.id)
+        res.json('deleted succesfully')
+        // console.log("deleted succesfully");
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+const Editpost= async(req,res)=>{
+try{
+console.log(req.body,"ooooooooooo");
+if(req.body.postDesc!='')
+{
+    postschema.findByIdAndUpdate(req.body.postId, { desc:req.body.postDesc},
+                            function (err, docs) {
+    if (err){
+        console.log(err)
+    }
+    else{
+        console.log("Updated post : ", docs);
+    }
+});
+}
+
+res.json('success')
+}catch(err){
+    console.log(err);
+}
+}
+
+const reportSubmit= async(req,res)=>{
+    console.log(req.body)
+    // reportModel.
+ try{
+    const reportdetail = new reportModel(req.body);
+         reportdetail.save()
+    res.json('report submitted')
+}catch(error){
+    console.log(error);
+}
+}
+
+
+module.exports = {reportSubmit,Editpost,deletePost, updateProfile, userDetail, getChapter, getcourses, createCourse, acceptConnection, connectionRequestList, sendRequest, getUserData, postSignup, login, addpost, getpost, newComment, getComment, likePost, visituser, connectionhelper }

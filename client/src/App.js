@@ -20,6 +20,8 @@ import Courseviewpage from './pages/user/courseviewpage';
 import AddCourse from './pages/user/addCourse';
 import Connectionpage from './pages/user/connectionpage';
 import Otherprofilepage from './pages/user/otherprofilepage';
+import CourseListPage from './pages/user/courseListPage';
+import AdminReportManagepage from './pages/admin/adminReportManagePage'
 function App() {
   return (
     <div className="App">
@@ -38,6 +40,7 @@ function App() {
           <Route path='/addCourse' element={<AddCourse/>}/>
           <Route path='/connections' element={<Connectionpage/>}/>
           <Route path='/otherprofile' element={<Otherprofilepage/>}/>
+          <Route path='/courseList' element={<CourseListPage/>}/>
           {/* Admin routes */}
           <Route path='/admin' element={<Adminlogin/>}/>
           <Route path='/admindashboard' element={<Admindash/>}/>
@@ -45,6 +48,7 @@ function App() {
           <Route path='/adminpostmanage' element={<Adminpostmanagepage/>}/>
           <Route path='/admininbox' element={<Admininboxpage/>}/>
           <Route path='/admincoursemanage' element={<Admincoursemanagepage/>}/>
+          <Route path='/adminReportManage' element={<AdminReportManagepage/>}/>
         </Routes>
       </Router>
     </div>

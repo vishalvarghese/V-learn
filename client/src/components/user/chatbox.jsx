@@ -9,6 +9,7 @@ import InputEmoji from 'react-input-emoji'
 import {IoIosSend} from 'react-icons/io'
 import {io} from 'socket.io-client'
 import { TiMessages } from 'react-icons/ti'
+import Header from './hearder'
 
 function Chatbox() {
 const[chats,setChats]=useState([])
@@ -72,7 +73,9 @@ useEffect(()=>{
 
 return (
     <div>
+     
       <body>
+      <Header/>
     <div class="h-screen chatscreen p-5">
       <section class=" shadow-xl rounded-md w-full lg:w-11/12 lg:mx-auto flex">
         {/* <!-- Left section --> */}

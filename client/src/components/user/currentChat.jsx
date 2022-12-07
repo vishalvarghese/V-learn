@@ -8,7 +8,7 @@ import {IoIosSend} from 'react-icons/io'
 import { addMessage } from '../../api/messageRequest'
 function CurrentChat({chat,currentUserId,setSendMessage,recieveMessage}) {
   const [newMessage,setNewMessage]= useState("")
-  const[userData,setUserData]= useState(null)
+  const[userData,setUserData]= useState({})
   // const[chats,setChats]=useState([])
   const[messages,setMessages]=useState([])
 
@@ -27,8 +27,8 @@ setMessages([...messages,recieveMessage])}
     const getUserData = async()=>{
       try{   
          const {data}=await getUser(userId)
-         setUserData(data)
-         console.log(data);
+         setUserData(data[0])
+        
        }catch(error){
         console.log(error);
        }
@@ -43,7 +43,7 @@ if(chat!==null) getUserData();
         // console.log(chat._id +"hhhhhhhhhhhhhhhhhhhhhhhhhhh")
      const {data}= await getMessages(chat._id)//write function
      setMessages(data);
-     console.log(data) //1.04
+    //  console.log(data) //1.04
       }catch(error){
         console.log(error);
       }
@@ -71,14 +71,14 @@ if(chat!==null) getUserData();
     }catch(error){
       console.log(error);
     }
-    console.log(currentUserId,"ccccccccccccccccccccccccc");
+    // console.log(currentUserId,"ccccccccccccccccccccccccc");
     const recieverId=chat.members.find((id)=> id!== currentUserId)
-    console.log(recieverId,"rrrrrrrrrrrrrrrrrrrrrr",message);
+    // console.log(recieverId,"rrrrrrrrrrrrrrrrrrrrrr",message);
     
 
      setSendMessage({...message,recieverId})
 
-     console.log("mesasakhkjjjjjjjjjjjjjj");
+    //  console.log("mesasakhkjjjjjjjjjjjjjj");
 
   }
   
@@ -90,7 +90,7 @@ if(chat!==null) getUserData();
   return (  <div className='flex flex-col'>
     <div class="flex flex-row items-center justify-between px-3 py-2 bg-gray-50 bg-opacity-40 border-b-2 border-gray-100">
             <div class="">
-              <h2 class="font-medium p-2">Alexa Androz</h2>
+              <h2 class="font-medium p-2">{userData.name}</h2>
             
             </div>
             </div>
@@ -124,7 +124,7 @@ if(chat!==null) getUserData();
             <div class="flex flex-row p-2 w-11/12">
                 
             <div class="w-1/12 py-2 flex">
-              <img src="https://www.statnews.com/wp-content/uploads/2018/01/AdobeStock_107381486-645x645.jpeg" class="h-12 w-12 rounded-full self-end" alt=""/>
+              <img src={userData.profilePicture} class="h-12 w-12 rounded-full self-end" alt=""/>
             </div>
             <div class="w-11/12 p-2">
               <div class="bg-gray-50 p-3 rounded-xl mb-2 relative">

@@ -21,11 +21,16 @@ const postSchema=new mongoose.Schema({
         default:[]
     },
     courseName:{
-        type:String
+        type:String,
+        default:'General post'
     },
     courseId:{
       type:String
     },
+    status:{
+        type:String,
+        default:'active'
+      }
     },{
         timestamps:true 
     })

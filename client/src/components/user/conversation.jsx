@@ -30,7 +30,7 @@ userData.map((obj)=>{
   return(
     // <div><p>{obj.name}</p></div>
 <li class="my-2 p-2 flex flex-row cursor-pointer rounded-lg hover:bg-gray-50 hover:bg-opacity-50">
-    <div className=' flex'> <img src={PF+obj.profilePicture} class="hidden md:block h-12 w-12 rounded-full mr-4" alt=""/>
+    <div className=' flex'> <img src={obj.profilePicture} class="hidden md:block h-12 w-12 rounded-full mr-4" alt=""/>
     
     </div>
     

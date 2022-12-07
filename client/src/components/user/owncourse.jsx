@@ -59,7 +59,9 @@ function Owncourse() {
    
   useEffect(()=>{
   axios.get('http://localhost:5000/getcourses').then((response)=>{
-    setCourses(response.data) 
+  const ownCourse=(response.data).filter(obj=>obj.userId===user._id)
+
+  setCourses(ownCourse) 
     // console.log(response.data);
  }).catch((err)=>{
    console.log(err);
@@ -162,18 +164,18 @@ function Owncourse() {
     <div class="-ml-20 flex p-4 text-left text-gray-700">
       <img class="mr-5 h-12 w-12 rounded-full" src="https://ui-avatars.com/api/?name=John+Doe" alt="" />
       <div class="w-full space-y-3 text-gray-700">
-        <div class="">
-          <input onChange={(e) => { setCourseName(e.target.value) }} type="text" placeholder="Course name" class="h-12 w-full max-w-full rounded-md border bg-white px-5 text-sm outline-none focus:ring" />
+        <div className="mb-4">
+          <input required onChange={(e) => { setCourseName(e.target.value) }} type="text" placeholder="Course name" class="h-12 w-full max-w-full rounded-md border bg-white px-5 text-sm outline-none focus:ring" />
         </div>
-       
-          <input onChange={(e) => { setImageFile(e.target.files[0]) }} name='imageFile' type="file" placeholder="name" class="h-12 w-full max-w-full rounded-md  bg-white px-5 text-sm outline-none" />
+       <label  htmlFor="imageFile">Course Poster Image</label>
+          <input required accept="image/*" onChange={(e) => { setImageFile(e.target.files[0]) }} name='imageFile' type="file" placeholder="name" class="h-12 w-full max-w-full rounded-md  bg-white px-5 text-sm outline-none" />
         
        
         <div class="">
-          <textarea onChange={(e) => { setDesc(e.target.value) }} name="comment" id="" placeholder="Write description of the course" cols="30" rows="6" class="h-40 w-full min-w-full max-w-full overflow-auto whitespace-pre-wrap rounded-md border bg-white p-5 text-sm font-normal normal-case text-gray-600 opacity-100 outline-none focus:text-gray-600 focus:opacity-100 focus:ring"></textarea>
+          <textarea required onChange={(e) => { setDesc(e.target.value) }} name="comment" id="" placeholder="Write description of the course" cols="30" rows="6" class="h-40 w-full min-w-full max-w-full overflow-auto whitespace-pre-wrap rounded-md border bg-white p-5 text-sm font-normal normal-case text-gray-600 opacity-100 outline-none focus:text-gray-600 focus:opacity-100 focus:ring"></textarea>
         </div>
         <div class="float-right">
-          <button  type="submit" value="Launch" class="relative inline-flex h-10 w-auto max-w-full cursor-pointer items-center justify-center overflow-hidden whitespace-pre rounded-md bg-blue-700 px-4 text-center text-sm font-medium normal-case text-white opacity-100 outline-none focus:ring" />
+          <input  type="submit" value="Launch" class="relative inline-flex h-10 w-auto max-w-full cursor-pointer items-center justify-center overflow-hidden whitespace-pre rounded-md bg-blue-700 px-4 text-center text-sm font-medium normal-case text-white opacity-100 outline-none focus:ring" />
         </div>
       </div>
     </div>

@@ -142,7 +142,7 @@ function Header() {
 
           <li>
             <a
-              href="/connections"
+              href="/courseList"
               aria-label="Our product"
               title="Our product"
               class="font-medium tracking-wide text-blue-900 transition-colors duration-200 hover:text-teal-accent-400"
@@ -390,7 +390,7 @@ function Header() {
       <div class="w-full space-y-3 text-gray-700">
        
        <label htmlFor="imageFile">Upload New Profile Picture</label>
-          <input onChange={(e) => { setImageFile(e.target.files[0]) }} name='imageFile' type="file" placeholder="name" class="h-12 w-full max-w-full rounded-md  bg-white px-5 text-sm outline-none" />
+          <input accept="image/*" onChange={(e) => { setImageFile(e.target.files[0]) }} name='imageFile' type="file" placeholder="name" class="h-12 w-full max-w-full rounded-md  bg-white px-5 text-sm outline-none" />
         
         <div class="">
           <input onChange={(e) => { setDesignation(e.target.value) }} type="text" placeholder="Profession/Desigination" class="h-12 w-full max-w-full rounded-md border bg-white px-5 text-sm outline-none focus:ring" />

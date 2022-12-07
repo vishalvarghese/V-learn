@@ -18,7 +18,6 @@ const check = (req, res, next) => {
         console.log(error.message);
         res.send({ status: "errors", data: error.message })
     }
-
 }
 
 module.exports = check;
