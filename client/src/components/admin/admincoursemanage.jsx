@@ -1,15 +1,18 @@
 import React,{useEffect,useState} from 'react'
 import Sidebar from './sidebar'
-import Axios from 'axios'
+import axios from 'axios'
 function AdminCoursemanage() {
   const [showModal,setShowModal]=useState(false);
 
+  const axiosInstance=axios.create({
+    baseURL:process.env.REACT_APP_API_URL
+  })
 
 
   const [courseList,setCourseList]=useState([])
     const [change,setchange]=useState(true)
     useEffect(()=>{
-        Axios.get('http://localhost:5000/adminCourselist',{
+      axiosInstance.get('/adminCourselist',{
             // headers:{"x-access-token":localStorage.getItem('admintoken')}
         }).then((response)=>{
          console.log(response.data); 

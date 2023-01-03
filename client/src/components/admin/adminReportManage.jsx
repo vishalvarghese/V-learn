@@ -4,13 +4,16 @@ import Axios from 'axios'
 import {confirmAlert} from 'react-confirm-alert'
 import { useNavigate } from "react-router-dom";
 function AdminReportmanage() {
+  const axiosInstance=Axios.create({
+    baseURL:process.env.REACT_APP_API_URL
+  })
     const navigate = useNavigate()
 
     const [showModal,setShowModal]=useState(false);
   const [reportList,setReportList]=useState([])
     const [change,setchange]=useState(true)
     useEffect(()=>{
-        Axios.get('http://localhost:5000/adminReportlist',{
+        axiosInstance.get('/adminReportlist',{
             // headers:{"x-access-token":localStorage.getItem('admintoken')}
         }).then((response)=>{
          console.log(response.data); 
@@ -56,7 +59,7 @@ function AdminReportmanage() {
                   label:'yes',
                   onClick:()=>{
                     
-                      Axios.post('http://localhost:5000/blockPost/'+id)
+                      axiosInstance.post('/blockPost/'+id)
                       .then((res)=>{
                           setchange(!change)
                         navigate("/adminReportManage")
@@ -81,7 +84,7 @@ function AdminReportmanage() {
                     label:'yes',
                     onClick:()=>{
                        
-                        Axios.post('http://localhost:5000/unblockPost/'+id)
+                        axiosInstance.post('/unblockPost/'+id)
                         .then((res)=>{
                             setchange(!change)
                           navigate("/adminReportManage")

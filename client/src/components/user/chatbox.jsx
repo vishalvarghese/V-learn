@@ -27,7 +27,8 @@ console.log(sendMessage,"senddde msgsgshsh");
 
 
 useEffect(()=>{
-socket.current =io('http://localhost:8800')
+socket.current =io(process.env.REACT_APP_SOCKET_URL,
+  {path:'/socket/socket.io'})
 socket.current.emit("new-user-add",user._id)
 socket.current.on('get-users',(users)=>{
   setOnlineUsers(users);

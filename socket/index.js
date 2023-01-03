@@ -1,6 +1,7 @@
 const io =require('socket.io')(8800,{
+    path:'/socket/socket.io',
     cors:{
-        orgin:"http://localhost:3000"
+        orgin:"http://catchlatest.ml"
     }
 })
 

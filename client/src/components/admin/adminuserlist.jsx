@@ -6,6 +6,10 @@ import 'react-confirm-alert/src/react-confirm-alert.css'
 import {Link,useNavigate} from "react-router-dom"
 
 function Adminuserlist() {
+
+    const axiosInstance=Axios.create({
+        baseURL:process.env.REACT_APP_API_URL
+      })
     const navigate =useNavigate()
 useEffect(()=>{
     const token=localStorage.getItem("admintoken")
@@ -20,7 +24,7 @@ useEffect(()=>{
     const [userlist,setuserlist]=useState([])
     const [change,setchange]=useState(true)
     useEffect(()=>{
-        Axios.get('http://localhost:5000/adminuserlist',{
+        axiosInstance.get('/adminuserlist',{
             headers:{"x-access-token":localStorage.getItem('admintoken')}
         }).then((response)=>{
         //  console.log(response.data); 
@@ -39,7 +43,7 @@ useEffect(()=>{
                     label:'yes',
                     onClick:()=>{
                       
-                        Axios.post('http://localhost:5000/blockuser/'+id)
+                        axiosInstance.post('/blockuser/'+id)
                         .then((res)=>{
                             setchange(!change)
                           navigate("/adminuserlist")
@@ -62,7 +66,7 @@ useEffect(()=>{
                     label:'yes',
                     onClick:()=>{
                        
-                        Axios.post('http://localhost:5000/unblockuser/'+id)
+                        axiosInstance.post('/unblockuser/'+id)
                         .then((res)=>{
                             setchange(!change)
                           navigate("/adminuserlist")

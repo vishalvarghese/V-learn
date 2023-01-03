@@ -4,6 +4,11 @@ import adminimg from '../../asset/adminimg.webp'
 import {useNavigate} from "react-router-dom";
 import axios from "axios"
 function Adminsignup() {
+
+  const axiosInstance=axios.create({
+    baseURL:process.env.REACT_APP_API_URL
+  })
+
   const navigate=useNavigate()
   const formvalues ={
     email:"",
@@ -16,8 +21,8 @@ function Adminsignup() {
   }
   const handleSubmit=(e)=>{
     e.preventDefault()
-    axios
-    .post("http://localhost:5000/adminlogin",adminLoginData)    
+    axiosInstance
+    .post("/adminlogin",adminLoginData)    
     .then((response)=>{
       console.log(response);
       setErrorMessage(response.data.error)
