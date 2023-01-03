@@ -23,6 +23,10 @@ function Course_view() {
     setShowModal(true)
   }
 
+  const axiosInstance=axios.create({
+		baseURL:process.env.REACT_APP_API_URL
+	})
+  
   const submitHandler = async (e) => {
     e.preventDefault()
     console.log("form submitted");
@@ -43,7 +47,7 @@ function Course_view() {
       data.append("name", fileName)
       // ChapterDetails.video = fileName
       try {
-        await axios.post('http://localhost:5000/post/upload', data).then((response)=>{
+        await axiosInstance.post('/post/upload', data).then((response)=>{
           // console.log(response.data,'qqqqqqqqqqqqqqq');
           ChapterDetails.video='https://drive.google.com/uc?export=view&id='+response.data
         })
@@ -53,7 +57,7 @@ function Course_view() {
       }
     }
 
-    axios.post("http://localhost:5000/post",ChapterDetails).then(
+    axiosInstance.post("/post",ChapterDetails).then(
       (res)=>{
         console.log(res.data)
         window.location.reload()
@@ -67,7 +71,7 @@ function Course_view() {
 
 
   useEffect(()=>{
-    axios.get(`http://localhost:5000/getChapters/${courseInfo._id}`).then((response)=>{
+    axiosInstance.get(`/getChapters/${courseInfo._id}`).then((response)=>{
       setChapters(response.data) 
        console.log(response.data);
 

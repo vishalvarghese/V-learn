@@ -1,4 +1,4 @@
-import React,{useState} from 'react'
+import React,{useState,useEffect} from 'react'
 import headerlogo from '../../asset/header logo.png'
 import feedimg from '../../asset/feedimg.png'
 import chatimg from '../../asset/chat.png'
@@ -21,6 +21,15 @@ function Header() {
     const [imageFile, setImageFile] = useState('')
     const [desc, setDesc] = useState('')
     const [designation,setDesignation]=useState('')
+
+const [ notificationData,setNotificationData]=useState([])
+const [ counts,SetCounts]=useState('')
+const [openNot,SetOpenNot]=useState(false)
+
+const axiosInstance=axios.create({
+  baseURL:process.env.REACT_APP_API_URL
+})
+
     const logout = (e) => {
         e.preventDefault()
         Swal.fire({
@@ -72,7 +81,7 @@ function Header() {
         data.append("name", fileName)
         // courseDetails.img = fileName
         try {
-          await axios.post('http://localhost:5000/post/upload', data).then((response)=>{
+          await axiosInstance.post('/post/upload', data).then((response)=>{
             // console.log(response,'qqqqqqqqqqqqqqq');
             updateData.img='https://drive.google.com/uc?export=view&id='+response.data})
   
@@ -80,7 +89,7 @@ function Header() {
           console.log(error);
         }
       }
-      axios.post("http://localhost:5000/updateProfile",updateData).then(
+      axiosInstance.post("/updateProfile",updateData).then(
         (res)=>{
           console.log(res)
           window.location.reload()
@@ -91,6 +100,41 @@ function Header() {
         console.log(error)
       }
       }
+
+
+      // start
+      useEffect(() => {
+        console.log("hiiiii");
+       const notificationHandler = async () => {
+           try {
+               const { data } = await axiosInstance.get("/getNotification/"+user._id)
+               console.log(data , "dataaaaawwwwwwwwww");
+
+               setNotificationData(data.data.notification)
+               SetCounts(data.countLength)
+
+           } catch (error) {
+               console.log(error , "error");
+           }
+       }
+
+       notificationHandler()
+
+   }, [])
+      // end
+
+      const notificationHandle = async (e) => {
+        SetOpenNot(!openNot)
+        try {
+
+            const { data } = await axiosInstance.post('/updateReadNotification/'+user._id)
+            SetCounts("0")
+
+        } catch (error) {
+
+
+        }
+    }
 
   return (
     
@@ -166,6 +210,20 @@ function Header() {
                 <div className='flex justify-center'>CHAT</div>
               </div>
             </a>
+          </li>
+          <li >
+            <a
+              onClick={(e)=>notificationHandle(e)}
+              aria-label="About us"
+              title="About us"
+              class="font-medium tracking-wide text-blue-900 transition-colors duration-200 hover:text-teal-accent-400"
+            >
+              <div className='text-xs  justify-between w-full items-center'>
+                <div className='flex relative justify-center'><img className='w-10 h-10' src={chatimg} alt="" /><div className='absolute p-1 top-0 right-0 bg-red-600 rounded-2xl text-sm'>{counts}</div></div>
+                <div className='flex justify-center'>notification</div>
+              </div>
+            </a>
+            
           </li>
         </ul>
       </div>
@@ -400,7 +458,7 @@ function Header() {
           <textarea onChange={(e) => { setDesc(e.target.value) }} name="comment" id="" placeholder="Write About your self" cols="30" rows="6" class="h-40 w-full min-w-full max-w-full overflow-auto whitespace-pre-wrap rounded-md border bg-white p-5 text-sm font-normal normal-case text-gray-600 opacity-100 outline-none focus:text-gray-600 focus:opacity-100 focus:ring"></textarea>
         </div>
         <div class="float-right">
-          <button  type="submit"  class="relative inline-flex h-10 w-auto max-w-full cursor-pointer items-center justify-center overflow-hidden whitespace-pre rounded-md bg-blue-700 px-4 text-center text-sm font-medium normal-case text-white opacity-100 outline-none focus:ring" />
+          <button  type="submit"  value='update' class="relative inline-flex h-10 w-auto max-w-full cursor-pointer items-center justify-center overflow-hidden whitespace-pre rounded-md bg-blue-700 px-4 text-center text-sm font-medium normal-case text-white opacity-100 outline-none focus:ring" />
         </div>
       </div>
     </div>
@@ -416,6 +474,36 @@ function Header() {
                     <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
                 </>
             ) : null}
+  
+  
+
+  {
+                            openNot &&
+
+                            <div class="absolute right-56 max-h-48 z-20 w-60 py-2  overflow-y-scroll no-scrollbar  rounded-md shadow-xl dark:bg-blue-200 top-28 bg-sky-100  ">
+                                {notificationData.map((obj) => {
+
+                                    return (
+
+                                        <div class="flex items-center p-3 -mt-2 text-sm text-gray-600 transition-colors duration-200 transform dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-white">
+                                           
+                                                <img class="flex-shrink-0 object-cover mx-1 rounded-full w-10 h-10" src={obj.user.profilePicture} />
+                                              
+
+                                            <div class="mx-1 flex ">
+                                                <h1 class="text-sm font-semibold text-gray-700 dark:text-gray-900 ">{obj.user.name}</h1>
+                                                <p class="text-sm font-semibold text-gray-700 dark:text-gray-900 pl-2">{obj.desc}</p>
+
+                                            </div>
+                                        </div>
+
+                                    )
+                                })
+                                }
+                            </div>
+                        }
+  
+  
   </div>
   )
 }

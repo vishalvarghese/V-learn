@@ -12,6 +12,11 @@ function Signupform() {
     password:"",
     confirmpassword:""
    }
+
+   const axiosInstance=axios.create({
+		baseURL:process.env.REACT_APP_API_URL
+	})
+
    const [signup,setSignup]=useState(formvalues);
    const [errorMessage, setErrorMessage] = useState('')
  
@@ -55,8 +60,8 @@ else if (signup.password!=signup.confirmpassword) {
   setErrorMessage("Password mismatch");
 }
   else{
-    axios
-    .post("http://localhost:5000/signup",signup)    
+    axiosInstance
+    .post("/signup",signup)    
     .then((res)=>{
       navigate("/login")
     })

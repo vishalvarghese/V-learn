@@ -34,6 +34,11 @@ function Feed() {
   const [previewUrl, setPreviewUrl] = useState('')
   //console.log(user);
   const [profiledrop, setprofiledrop] = useState(false)
+
+  const axiosInstance=axios.create({
+    baseURL:process.env.REACT_APP_API_URL
+  })
+
   const dispatch = useDispatch();
   const submitHandler = async (e) => {
     e.preventDefault()
@@ -48,7 +53,7 @@ function Feed() {
       data.append("name", fileName)
       // newPost.img = fileName
       try {
-        await axios.post('http://localhost:5000/post/upload', data).then((response)=>{
+        await axiosInstance.post('/post/upload', data).then((response)=>{
           // console.log(response,'qqqqqqqqqqqqqqq');
           newPost.img='https://drive.google.com/uc?export=view&id='+response.data
         })
@@ -64,7 +69,7 @@ function Feed() {
       data.append("name", fileName)
       // newPost.video = fileName
       try {
-        await axios.post('http://localhost:5000/post/upload', data).then((response)=>{
+        await axiosInstance.post('/post/upload', data).then((response)=>{
           // console.log(response.data,'qqqqqqqqqqqqqqq');
           newPost.video='https://drive.google.com/uc?export=view&id='+response.data
         })
@@ -73,14 +78,14 @@ function Feed() {
       }
     } 
     try {
-      await axios.post('http://localhost:5000/post', newPost)
+      await axiosInstance.post('/post', newPost)
       window.location.reload()
     } catch (err) {
       console.log(err);
     }
   }
   useEffect(() => {
-    axios.get('http://localhost:5000/feedpost', {
+    axiosInstance.get('/feedpost', {
     }).then((response) => {
       // console.log(response.data); 
       setPost(response.data)

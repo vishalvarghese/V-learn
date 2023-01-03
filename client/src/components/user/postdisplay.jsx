@@ -23,6 +23,10 @@ function Postdisplay({ obj }) {
   const[updateDesc,setUpdateDesc]=useState('')
   const [showModalPostupdation,setShowModalPostupdation]=useState(false);
   
+  const axiosInstance=axios.create({
+		baseURL:process.env.REACT_APP_API_URL
+	})
+
   const [showModalReport,setShowModalReport]=useState(false)
    const [reportMessage,setReportMessage]=useState('')
   useEffect(() => {
@@ -32,7 +36,7 @@ function Postdisplay({ obj }) {
 
   const likeHandler = () => {
     try {
-      axios.put('http://localhost:5000/post/like/'+obj._id,{ userId:user._id });
+      axiosInstance.put('/post/like/'+obj._id,{ userId:user._id });
     } catch (err) {
       console.log(err);
     }
@@ -51,7 +55,7 @@ function Postdisplay({ obj }) {
     }
 
     try {
-      await axios.post('http://localhost:5000/newComment', newComment)
+      await axiosInstance.post('/newComment', newComment)
       // window.location.reload()
       setCommentDesc('')
     } catch (err) {
@@ -61,7 +65,7 @@ function Postdisplay({ obj }) {
   }
   useEffect(() => {
     // pass post id
-    axios.get('http://localhost:5000/getComment/' + obj._id).then((response) => {
+    axiosInstance.get('/getComment/' + obj._id).then((response) => {
       // console.log(response.data, 'hdelooooooooooo');
       setCommentdata(response.data)
       setNoOfComments(response.data.length)
@@ -75,7 +79,7 @@ function Postdisplay({ obj }) {
 
   const deletePost=(id)=>{
     // console.log(id,"dddddddddddddd")
- axios.post('http://localhost:5000/deletePost/'+id).then((response)=>{
+    axiosInstance.post('/deletePost/'+id).then((response)=>{
   console.log(response)
  }).catch((err)=>{
   console.log(err)
@@ -91,7 +95,7 @@ const postUpdateData={
   postId:obj._id
 }
 
-axios.post('http://localhost:5000/EditPost',postUpdateData).then((response)=>{
+axiosInstance.post('/EditPost',postUpdateData).then((response)=>{
   console.log(response)
   window.location.reload()
  }).catch((err)=>{
@@ -113,7 +117,7 @@ const submitReport= async(e)=>{
   userId:user._id
  }
 try{
- axios.post('http://localhost:5000/Reportsubmit',reportData).then((response)=>{
+  axiosInstance.post('/Reportsubmit',reportData).then((response)=>{
   console.log(response)
   // window.location.reload()
  }).catch((err)=>{

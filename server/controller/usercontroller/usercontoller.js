@@ -10,6 +10,7 @@ const courses = require("../../modal/courses");
 const postschema = require("../../modal/postschema");
 const { findByIdAndDelete } = require("../../modal/userschema");
 const reportModel = require("../../modal/reportSchema");
+const notificationSchemma = require("../../modal/notificationschema");
 
 const postSignup = async (req, res) => {
     try {
@@ -24,6 +25,7 @@ const postSignup = async (req, res) => {
             password
         })
         await user.save()
+        
         res.status(200).json({ res: user })
     } catch (error) {
         console.log(error.message);
@@ -71,7 +73,7 @@ const addpost = async (req, res) => {
         const savedPost = await newPost.save()
         //   await Users.updateOne({$push:{posts:savedPost._id}})
         res.json(savedPost)
-
+  
     } catch (error) {
         res.json(error)
     }
@@ -113,8 +115,19 @@ const likePost = async (req, res) => {
         console.log('like');
         const postdata = await postschema.findById(req.params.id)
         // console.log(post);
+  
+        let details = {
+            user: req.body.userId,
+            desc: "liked your post"
+          }
+
         if (!postdata.likes.includes(req.body.userId)) {
             await postdata.updateOne({ $push: { likes: req.body.userId } })
+           
+            await notificationSchemma.
+            updateOne({ userId:postdata.userId },
+              { $push: { notification: details } },{upsert:true})
+
             res.json("The post has been liked")
 
         } else {
@@ -377,4 +390,53 @@ const reportSubmit= async(req,res)=>{
 }
 
 
-module.exports = {reportSubmit,Editpost,deletePost, updateProfile, userDetail, getChapter, getcourses, createCourse, acceptConnection, connectionRequestList, sendRequest, getUserData, postSignup, login, addpost, getpost, newComment, getComment, likePost, visituser, connectionhelper }
+const getNotification=async (req, res) => {
+
+    try {
+
+      let data = await notificationSchemma.
+        findOne({ userId: req.params.userId }).
+        populate("notification.user",
+          "name profilePicture")
+      let count = data.notification.filter((obj) => {
+
+        if (obj.status == "true") {
+          return obj
+
+        }
+
+      })
+      let countLength = count.length
+      res.status(200).json({ data, countLength })
+
+    } catch (error) {
+
+      console.log(error.message, "message")
+      res.status(500).json(error)
+
+    }
+  }
+
+  
+ const notificationRead= async (req, res) => {
+
+
+    try {
+
+      let data = await notificationSchemma.
+        updateOne({ userId: req.params.userId },
+          { $set: { "notification.$[].status": "false" } })
+      res.status(200).json("updated")
+
+
+    } catch (error) {
+
+      console.log(error.message, "message")
+      res.status(500).json(error)
+
+    }
+
+  }
+
+
+module.exports = {notificationRead,getNotification,reportSubmit,Editpost,deletePost, updateProfile, userDetail, getChapter, getcourses, createCourse, acceptConnection, connectionRequestList, sendRequest, getUserData, postSignup, login, addpost, getpost, newComment, getComment, likePost, visituser, connectionhelper }

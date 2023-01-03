@@ -17,6 +17,10 @@ function Owncourse() {
     setShowModal(true)
   }
 
+  const axiosInstance=axios.create({
+		baseURL:process.env.REACT_APP_API_URL
+	})
+
   const submitHandler = async (e) => {
     e.preventDefault()
     console.log("form submitted");
@@ -37,7 +41,7 @@ function Owncourse() {
       data.append("name", fileName)
       // courseDetails.img = fileName
       try {
-        await axios.post('http://localhost:5000/post/upload', data).then((response)=>{
+        await axiosInstance.post('/post/upload', data).then((response)=>{
           // console.log(response,'qqqqqqqqqqqqqqq');
           courseDetails.img='https://drive.google.com/uc?export=view&id='+response.data})
 
@@ -46,7 +50,7 @@ function Owncourse() {
       }
     }
 
-    axios.post("http://localhost:5000/createCourse",courseDetails).then(
+    axiosInstance.post("/createCourse",courseDetails).then(
       (res)=>{
         console.log(res.data.newCourse)
         window.location.reload()
@@ -58,7 +62,7 @@ function Owncourse() {
   }
    
   useEffect(()=>{
-  axios.get('http://localhost:5000/getcourses').then((response)=>{
+    axiosInstance.get('/getcourses').then((response)=>{
   const ownCourse=(response.data).filter(obj=>obj.userId===user._id)
 
   setCourses(ownCourse) 

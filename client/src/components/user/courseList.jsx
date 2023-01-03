@@ -6,8 +6,12 @@ function CourseList() {
 
     const [courses,setCourses]=useState([])
 
+    const axiosInstance=axios.create({
+      baseURL:process.env.REACT_APP_API_URL
+    })
+
     useEffect(()=>{
-        axios.get('http://localhost:5000/getcourses').then((response)=>{
+      axiosInstance.get('/getcourses').then((response)=>{
           setCourses(response.data) 
           // console.log(response.data);
        }).catch((err)=>{

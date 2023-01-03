@@ -6,8 +6,11 @@ function Connect_requests() {
 	const PF = process.env.REACT_APP_PUBLIC_FOLDER
 	const user = useSelector((state) => state.user)
 	const [requestList, setRequestList] = useState([])
+	const axiosInstance=axios.create({
+		baseURL:process.env.REACT_APP_API_URL
+	})
 	useEffect(() => {
-		axios.get(`http://localhost:5000/connectionRequestList/${user._id}`, {
+		axiosInstance.get(`/connectionRequestList/${user._id}`, {
 		}).then((response) => {
 			setRequestList(response.data)
 			//    console.log(requestList,"hhhhhhhhhhhhhhhhhhhh");
@@ -19,7 +22,7 @@ function Connect_requests() {
 
 	const acceptConnection = (id) => {
 		// console.log(id,"accepted you");
-		axios.post(`http://localhost:5000/acceptConnection/${user._id}/${id}`, {
+		axiosInstance.post(`/acceptConnection/${user._id}/${id}`, {
 		}).then((response) => {
 			//    setRequestList(response.data)
 			console.log(response.data, "acepterrrrrrrrrrrrrrrr");

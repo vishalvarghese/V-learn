@@ -23,8 +23,13 @@ function Profile() {
   const user = useSelector((state) => state.user)
   const [userDetail, setUserDetail] = useState({})
   const [post, setPost] = useState([])
+
+  const axiosInstance=axios.create({
+		baseURL:process.env.REACT_APP_API_URL
+	})
+
   useEffect(() => {
-    axios.get(`http://localhost:5000/userDetail/${user._id}`).then((response) => {
+    axiosInstance.get(`/userDetail/${user._id}`).then((response) => {
       //  console.log(response.data);
       setUserDetail(response.data)
     })
@@ -33,7 +38,7 @@ function Profile() {
 
 
   useEffect(() => {
-    axios.get('http://localhost:5000/feedpost', {
+    axiosInstance.get('/feedpost', {
     }).then((response) => {
       // console.log(response.data); 
       const mypost=(response.data).filter(obj=>obj.userId._id===user._id)

@@ -20,6 +20,12 @@ const dispatch=useDispatch()
     setloginData({ ...loginData, [e.target.name]: e.target.value })
   }
 
+  const axiosInstance=axios.create({
+		baseURL:process.env.REACT_APP_API_URL
+	})
+
+console.log(process.env.REACT_APP_API_URL)
+
   const handleSubmit = (e) => {
     e.preventDefault()
     try {
@@ -34,8 +40,8 @@ const dispatch=useDispatch()
       } else if (loginData.password.length > 20) {
         setErrorMessage("Password must be less than 20 characters");
       } else {
-        axios
-          .post("http://localhost:5000/login", loginData)
+        axiosInstance
+          .post("/login", loginData)
           .then((response) => {
             console.log(response.data.error);
             setErrorMessage(response.data.error)

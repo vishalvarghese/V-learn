@@ -21,8 +21,13 @@ function Connections() {
   const user = useSelector((state) => state.user)
   const[suggestionList,setSuggestionList]=useState([])
   const[connectedList,setConnectedList]=useState([])
+
+  const axiosInstance=axios.create({
+		baseURL:process.env.REACT_APP_API_URL
+	})
+
   useEffect(()=>{
-    axios.get('http://localhost:5000/connections/'+user._id).then((response)=>{
+    axiosInstance.get('/connections/'+user._id).then((response)=>{
       console.log(response.data.connectedList.connections,"jjjjjjjjjjjjjjjjjjj");
       setSuggestionList(response.data.suggestionList)
       setConnectedList(response.data.connectedList.connections)
@@ -58,7 +63,7 @@ function Connections() {
 
   const sendRequest=()=>{
   // console.log(modalData,'send requesst scucesssssssssssss');
-  axios.post(`http://localhost:5000/sendRequest/${user._id}/${modalData.connectUserId}`).then((res)=>{
+  axiosInstance.post(`/sendRequest/${user._id}/${modalData.connectUserId}`).then((res)=>{
     console.log(res.data);
   })
 
@@ -69,7 +74,7 @@ function Connections() {
       senderId:user._id,
       receiverId:recieverId
     }
-  axios.post('http://localhost:5000/chat',data).then((res)=>{
+    axiosInstance.post('/chat',data).then((res)=>{
     console.log(res.data);
     navigate('/chatbox')
   })
@@ -159,8 +164,9 @@ function Connections() {
   return(  <div class="flex justify-between relative p-4 w-full bg-white rounded-lg overflow-hidden shadow hover:shadow-md">
 	<img class="w-12 h-12 rounded-full bg-gray-100" src={profilepic} alt="" />
 	<div class="ml-3">
-	  <p class="font-medium text-gray-800 text-center">{obj.name}</p>
-	 
+	<Link key={index} to={'/otherprofile'} state={{otheruser:obj}}><div class="cursor-pointer ml-3">
+   <p class="font-medium text-gray-800 text-center">{obj.name}</p>
+   </div></Link>
 	</div>
     <button onClick={()=>{startChat(obj._id)}} className='rounded-2xl bg-blue-500 p-1'><p class="text-white text-sm  text-center">Message</p></button>
   </div>
@@ -180,7 +186,7 @@ function Connections() {
  suggestionList.map((obj,index)=>{
   return(  
   <div class="flex justify-between relative p-4 w-full bg-white rounded-lg overflow-hidden shadow hover:shadow-md">
-	<img class="w-12 h-12 rounded-full bg-gray-100" src={PF+obj.profilePicture} alt="" />
+	<img class="w-12 h-12 rounded-full bg-gray-100" src={obj.profilePicture} alt="" />
 	<Link key={index} to={'/otherprofile'} state={{otheruser:obj}}><div class="cursor-pointer ml-3">
 	  <p class="font-medium text-gray-800 text-center">{obj.name}</p>
 	</div></Link>

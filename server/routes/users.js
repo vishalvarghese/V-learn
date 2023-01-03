@@ -4,7 +4,7 @@ var GoogleDriveStorage = require('multer-google-drive')
 // const fs=require('fs')
 
 var express = require('express');
-const { postSignup, login, addpost, getpost, newComment, getComment, likePost, visituser, getUserData, connectionhelper, sendRequest, connectionRequestList, acceptConnection, createCourse, getcourses, getChapter, userDetail, updateProfile, deletePost, Editpost, reportSubmit } = require('../controller/usercontroller/usercontoller');
+const { postSignup, login, addpost, getpost, newComment, getComment, likePost, visituser, getUserData, connectionhelper, sendRequest, connectionRequestList, acceptConnection, createCourse, getcourses, getChapter, userDetail, updateProfile, deletePost, Editpost, reportSubmit, getNotification, notificationRead } = require('../controller/usercontroller/usercontoller');
 var router = express.Router();
 var multer = require('multer');
 const { allusers } = require('../controller/admincontroller/admincontroller');
@@ -90,9 +90,9 @@ const { allusers } = require('../controller/admincontroller/admincontroller');
               //working-end
 router.post('/post/upload', upload.single('file'), (req, res) => {
   try {
-    console.log(req.file,'pooppopopopopo')
-    console.log(req.file.fileName);
-    console.log(req.file.fileId);
+    // console.log(req.file,'pooppopopopopo')
+    // console.log(req.file.fileName);
+    // console.log(req.file.fileId);
 
     res.json(req.file.fileId)
   } catch (error) {
@@ -140,4 +140,7 @@ router.post('/updateProfile',updateProfile)
 router.post('/deletePost/:id',deletePost)
 router.post('/EditPost',Editpost)
 router.post('/Reportsubmit',reportSubmit)
+
+router.get('/getNotification/:userId',getNotification)
+router.post('/updateReadNotification/:userId',notificationRead)
 module.exports = router;
